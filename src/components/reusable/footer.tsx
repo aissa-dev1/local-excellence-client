@@ -11,7 +11,7 @@ export default function Footer(props: FooterProps) {
   const currentYear = new Date().getFullYear();
 
   return (
-    <div {...rest} class={cn("w-full", props.class)}>
+    <div {...rest} class={cn(props.class)}>
       <Container class="bg-card border border-border text-foreground py-3 px-4 rounded-none sm:rounded-t-md">
         <Typography.P>
           Copyright ©{" "}

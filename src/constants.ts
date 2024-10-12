@@ -5,3 +5,11 @@ export const API_URL_VERSIONS = {
   stores: "v1",
   sponsors: "v1",
 };
+
+export const GapSize = {
+  default: "gap-0",
+  section: "gap-12",
+  contentSm: "gap-2",
+  contentMd: "gap-4",
+  contentLg: "gap-6",
+};

@@ -97,7 +97,7 @@ export default function SponsorsCarousel(props: SponsorsCarouselProps) {
   });
 
   return (
-    <div class="space-y-6">
+    <Spacing.GapY size="content-sm">
       <div
         ref={currentCardRef}
         class={cn("relative w-full min-h-[225px] rounded-md overflow-hidden", {
@@ -159,6 +159,6 @@ export default function SponsorsCarousel(props: SponsorsCarouselProps) {
         <Button onClick={prevCard}>Prev</Button>
         <Button onClick={nextCard}>Next</Button>
       </div>
-    </div>
+    </Spacing.GapY>
   );
 }

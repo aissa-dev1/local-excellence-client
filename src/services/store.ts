@@ -8,13 +8,26 @@ export interface StoreType {
   type: string;
 }
 
-export interface HomeStoreType extends StoreType {
-  ownerName: string;
-}
-
 export class StoreService {
   async getStores(): Promise<StoreType[]> {
     const response = await axios.get(getApiUrl("stores"));
+    return response.data;
+  }
+
+  async getPaginatedStores(
+    page: number = 1,
+    limit: number = 5
+  ): Promise<StoreType[]> {
+    const response = await axios.get(
+      `${getApiUrl("stores")}/paginated?page=${page}&limit=${limit}`
+    );
+    return response.data;
+  }
+
+  async searchStores(query: string): Promise<StoreType[]> {
+    const response = await axios.get(
+      `${getApiUrl("stores")}/search?query=${query}`
+    );
     return response.data;
   }
 
@@ -23,8 +36,13 @@ export class StoreService {
     return response.data;
   }
 
-  async getHomeStores(): Promise<HomeStoreType[]> {
+  async getHomeStores(): Promise<StoreType[]> {
     const response = await axios.get(`${getApiUrl("stores")}/home`);
+    return response.data;
+  }
+
+  async getStoreByName(name: string): Promise<StoreType> {
+    const response = await axios.get(`${getApiUrl("stores")}/name/${name}`);
     return response.data;
   }
 }

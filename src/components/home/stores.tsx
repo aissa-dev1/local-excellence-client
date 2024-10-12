@@ -22,11 +22,14 @@ export default function HomeStores() {
             These are the stores of our valued clients who have subscribed to
             our service.
           </Typography.P>
-          <Show when={homeStores() && homeStores()!.length > 0}>
-            <A href="/stores">
-              <Button class="w-full sm:w-fit">See more ({storesSize()})</Button>
-            </A>
-          </Show>
+          <Spacing.GapX size="content-md">
+            <Button>Create yours</Button>
+            <Show when={homeStores() && homeStores()!.length > 0}>
+              <A href="/stores">
+                <Button variant="outline">See more ({storesSize()})</Button>
+              </A>
+            </Show>
+          </Spacing.GapX>
         </Spacing.GapY>
       </Spacing.GapY>
       <Show
