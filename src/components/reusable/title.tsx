@@ -1,10 +1,16 @@
 import { Title as SolidTitle } from "@solidjs/meta";
 import { ComponentProps, splitProps } from "solid-js";
 
-function TitleComponent(props: ComponentProps<"title">) {
+function TitleStatic(props: ComponentProps<"title">) {
   const [, rest] = splitProps(props, ["children"]);
 
   return <SolidTitle {...rest}>Local Excellence</SolidTitle>;
+}
+
+function TitleComponent(props: ComponentProps<"title">) {
+  const [, rest] = splitProps(props, ["children"]);
+
+  return <SolidTitle {...rest}>{props.children}</SolidTitle>;
 }
 
 function TitleRightSide(props: ComponentProps<"title">) {
@@ -20,6 +26,7 @@ function TitleLeftSide(props: ComponentProps<"title">) {
 }
 
 const Title = {
+  Static: TitleStatic,
   Self: TitleComponent,
   Right: TitleRightSide,
   Left: TitleLeftSide,

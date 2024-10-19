@@ -6,16 +6,21 @@ import { A } from "@solidjs/router";
 import { encodeStoreName } from "~/utils/store-name";
 import { service } from "~/service";
 import { createResource, Show } from "solid-js";
+import { withTryCatch } from "~/utils/with-try-catch";
 
 interface HomeStoreCardProps extends StoreType {}
 
 export default function HomeStoreCard({
+  userId,
   name,
   type,
-  ownerId,
 }: HomeStoreCardProps) {
-  const [storeOwner] = createResource(() => {
-    return service.user.getUserById(ownerId);
+  const [storeOwner] = createResource(async () => {
+    const [response, error] = await withTryCatch(
+      service.user.getMinimizedUser,
+      userId
+    );
+    return error ? null : response;
   });
 
   return (

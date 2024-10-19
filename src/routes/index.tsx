@@ -1,5 +1,6 @@
 import HomeHeader from "~/components/home/header";
 import HomeJoinUs from "~/components/home/join-us";
+import HomeProducts from "~/components/home/products";
 import HomeSponsors from "~/components/home/sponsors";
 import HomeStores from "~/components/home/stores";
 import Container from "~/components/reusable/container";
@@ -11,7 +12,7 @@ import Spacing from "~/components/ui/spacing";
 export default function Home() {
   return (
     <>
-      <Title.Self />
+      <Title.Static />
       <NavBar />
       <main>
         <Container>
@@ -19,6 +20,7 @@ export default function Home() {
             <HomeHeader />
             <HomeSponsors />
             <HomeStores />
+            <HomeProducts />
             <HomeJoinUs />
           </Spacing.GapY>
         </Container>

@@ -39,6 +39,7 @@ export default function Dashboard() {
           id: decodedUser.sub,
           email: decodedUser.email,
           userName: decodedUser.userName,
+          joinedAt: decodedUser.joinedAt,
         });
         feature.auth.updateIsAuthenticated(true);
       } catch (error) {

@@ -49,34 +49,34 @@ module.exports = {
         center: true,
       },
       animation: {
-        fade: "fade 0.5s ease-in-out",
-        slide: "slide 0.5s ease-in-out",
-        "fade-slide": "fade-slide 0.5s ease-in-out",
-        "zoom-slide": "zoom-slide 0.5s ease-in-out",
-        zoom: "zoom 0.5s ease-in-out",
+        "carousal-fade": "carousal-fade 0.5s ease-in-out",
+        "carousal-slide": "carousal-slide 0.5s ease-in-out",
+        "carousal-zoom": "carousal-zoom 0.5s ease-in-out",
+        "carousal-fade-slide": "carousal-fade-slide 0.5s ease-in-out",
+        "carousal-zoom-slide": "carousal-zoom-slide 0.5s ease-in-out",
       },
       keyframes: {
-        fade: {
+        "carousal-fade": {
           "0%": { opacity: "0" },
           "100%": { opacity: "1" },
         },
-        slide: {
+        "carousal-slide": {
           "0%": { transform: "translateX(-100%)" },
           "100%": { transform: "translateX(0)" },
         },
-        "fade-slide": {
+        "carousal-zoom": {
+          "0%": { transform: "scale(0)" },
+          "100%": { transform: "scale(1)" },
+        },
+        "carousal-fade-slide": {
           "0%": { opacity: "0", transform: "translateX(-100%)" },
           "50%": { opacity: "0.5", transform: "translateX(-50%)" },
           "100%": { opacity: "1", transform: "translateX(0)" },
         },
-        "zoom-slide": {
+        "carousal-zoom-slide": {
           "0%": { transform: "scale(0.5) translateX(-100%)" },
           "50%": { transform: "scale(0.75) translateX(-50%)" },
           "100%": { transform: "scale(1) translateX(0)" },
-        },
-        zoom: {
-          "0%": { transform: "scale(0)" },
-          "100%": { transform: "scale(1)" },
         },
       },
     },

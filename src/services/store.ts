@@ -3,9 +3,11 @@ import { getApiUrl } from "~/utils/get-api-url";
 
 export interface StoreType {
   _id: string;
+  userId: string;
   name: string;
-  ownerId: string;
+  description: string;
   type: string;
+  createdAt: number;
 }
 
 export class StoreService {
@@ -24,13 +26,6 @@ export class StoreService {
     return response.data;
   }
 
-  async searchStores(query: string): Promise<StoreType[]> {
-    const response = await axios.get(
-      `${getApiUrl("stores")}/search?query=${query}`
-    );
-    return response.data;
-  }
-
   async getStoresSize(): Promise<number> {
     const response = await axios.get(`${getApiUrl("stores")}/size`);
     return response.data;
@@ -43,6 +38,23 @@ export class StoreService {
 
   async getStoreByName(name: string): Promise<StoreType> {
     const response = await axios.get(`${getApiUrl("stores")}/name/${name}`);
+    return response.data;
+  }
+
+  async getStoreById(id: string): Promise<StoreType> {
+    const response = await axios.get(`${getApiUrl("stores")}/id/${id}`);
+    return response.data;
+  }
+
+  async getStoreTypes(): Promise<string[]> {
+    const response = await axios.get(`${getApiUrl("stores")}/types`);
+    return response.data;
+  }
+
+  async searchStores(query: string): Promise<StoreType[]> {
+    const response = await axios.post(
+      `${getApiUrl("stores")}/search?query=${query}`
+    );
     return response.data;
   }
 }

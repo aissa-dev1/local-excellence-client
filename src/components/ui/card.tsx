@@ -70,6 +70,16 @@ function CardFooter(props: ComponentProps<"div">) {
   );
 }
 
+function CardPadded(props: ComponentProps<"div">) {
+  const [, rest] = splitProps(props, ["class", "children"]);
+
+  return (
+    <div {...rest} class={cn("p-6", props.class)}>
+      {props.children}
+    </div>
+  );
+}
+
 const Card = {
   Self: CardComponent,
   Header: CardHeader,
@@ -77,6 +87,7 @@ const Card = {
   Description: CardDescription,
   Content: CardContent,
   Footer: CardFooter,
+  Padded: CardPadded,
 };
 
 export default Card;

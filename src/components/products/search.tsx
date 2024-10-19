@@ -4,33 +4,30 @@ import Input from "../ui/input";
 import Spacing from "../ui/spacing";
 import { GAP_SIZE } from "~/constants";
 import Label from "../ui/label";
-import SearchFilters from "./search-filters";
 
-interface StoresSearchProps {
+interface ProductsSearchProps {
   inputSearchQuery: Accessor<string>;
   searchQuery: Accessor<string>;
-  searchStores: (query: string) => void;
+  searchProducts: (query: string) => void;
   handleInputChange: (
     e: InputEvent & {
       currentTarget: HTMLInputElement;
       target: HTMLInputElement;
     }
   ) => void;
-  activeStoreType: Accessor<string>;
-  setActiveStoreType: Setter<string>;
 }
 
-export default function StoresSearch(props: StoresSearchProps) {
+export default function ProductsSearch(props: ProductsSearchProps) {
   return (
     <Spacing.GapY size="content-md">
       <Label for="search" class="w-fit">
-        Search for stores
+        Search for products
       </Label>
       <form
         class={`flex flex-col ${GAP_SIZE.contentMd} lg:flex-row`}
         onSubmit={(e) => {
           e.preventDefault();
-          props.searchStores(props.inputSearchQuery());
+          props.searchProducts(props.inputSearchQuery());
         }}
       >
         <Input
@@ -42,10 +39,6 @@ export default function StoresSearch(props: StoresSearchProps) {
         />
         <Button class="w-full lg:w-fit">Search</Button>
       </form>
-      <SearchFilters
-        activeStoreType={props.activeStoreType}
-        setActiveStoreType={props.setActiveStoreType}
-      />
     </Spacing.GapY>
   );
 }

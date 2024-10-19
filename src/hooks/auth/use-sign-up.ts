@@ -3,6 +3,7 @@ import { service } from "~/service";
 import { AuthSignUpData } from "~/services/auth";
 import { useToast } from "../use-toast";
 import { useLogin } from "./use-login";
+import { withTryCatch } from "~/utils/with-try-catch";
 
 interface UseSignUpData extends AuthSignUpData {
   loading: boolean;
@@ -21,26 +22,27 @@ export function useSignUp() {
   async function signUp() {
     if (signUpdata().loading) return;
 
-    try {
-      setSignUpData((prev) => ({ ...prev, loading: true }));
-      await service.auth.signUp({
-        email: signUpdata().email,
-        password: signUpdata().password,
-        userName: signUpdata().userName,
-      });
-      setLoginData((prev) => ({
-        ...prev,
-        email: signUpdata().email,
-        password: signUpdata().password,
-      }));
-      await login();
-    } catch (error: any) {
+    setSignUpData((prev) => ({ ...prev, loading: true }));
+    const [response, error] = await withTryCatch(service.auth.signUp, {
+      email: signUpdata().email,
+      password: signUpdata().password,
+      userName: signUpdata().userName,
+    });
+
+    if (error) {
       addToast(error.response.data.message, {
         variant: "destructive",
       });
-    } finally {
       setSignUpData((prev) => ({ ...prev, loading: false }));
+      return;
     }
+
+    setLoginData((prev) => ({
+      ...prev,
+      email: signUpdata().email,
+      password: signUpdata().password,
+    }));
+    await login();
   }
 
   return { signUpdata, setSignUpData, signUp };

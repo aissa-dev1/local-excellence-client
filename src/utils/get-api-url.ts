@@ -1,6 +1,6 @@
-import { API_URL_VERSIONS } from "~/constants";
+import { API_URL_VERSION } from "~/constants";
 
-export function getApiUrl(route: keyof typeof API_URL_VERSIONS): string {
+export function getApiUrl(route: keyof typeof API_URL_VERSION): string {
   const defaultVersion = "v1";
   let version: string;
 
@@ -9,6 +9,6 @@ export function getApiUrl(route: keyof typeof API_URL_VERSIONS): string {
     return `${import.meta.env.VITE_SERVER_URL}/api/${version}`;
   }
 
-  version = API_URL_VERSIONS[route] || defaultVersion;
+  version = API_URL_VERSION[route] || defaultVersion;
   return `${import.meta.env.VITE_SERVER_URL}/api/${version}/${route}`;
 }

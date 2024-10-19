@@ -5,10 +5,17 @@ import Typography from "../ui/typography";
 import HomeStoreCard from "./store-card";
 import { A } from "@solidjs/router";
 import { service } from "~/service";
+import { withTryCatch } from "~/utils/with-try-catch";
 
 export default function HomeStores() {
-  const [homeStores] = createResource(service.store.getHomeStores);
-  const [storesSize] = createResource(service.store.getStoresSize);
+  const [homeStores] = createResource(async () => {
+    const [response, error] = await withTryCatch(service.store.getHomeStores);
+    return error ? [] : response;
+  });
+  const [storesSize] = createResource(async () => {
+    const [response, error] = await withTryCatch(service.store.getStoresSize);
+    return error ? 0 : response;
+  });
 
   return (
     <Spacing.GapY size="content-lg">

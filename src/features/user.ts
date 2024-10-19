@@ -4,12 +4,14 @@ interface UserFeatureState {
   id: string;
   email: string;
   userName: string;
+  joinedAt: number;
 }
 
 export interface JWTUserType {
   sub: string;
   email: string;
   userName: string;
+  joinedAt: number;
 }
 
 export class UserFeature {
@@ -17,6 +19,7 @@ export class UserFeature {
     id: "",
     email: "",
     userName: "",
+    joinedAt: 0,
   });
 
   update(state: UserFeatureState) {

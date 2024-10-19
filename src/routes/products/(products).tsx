@@ -8,67 +8,55 @@ import {
   createEffect,
   on,
 } from "solid-js";
-import HomeStoreCard from "~/components/home/store-card";
+import HomeProductCard from "~/components/home/product-card";
+import ProductsHeader from "~/components/products/header";
+import ProductsSearch from "~/components/products/search";
 import Container from "~/components/reusable/container";
 import Footer from "~/components/reusable/footer";
 import NavBar from "~/components/reusable/nav-bar";
 import Title from "~/components/reusable/title";
-import StoresHeader from "~/components/stores/header";
-import StoresSearch from "~/components/stores/search";
 import Button from "~/components/ui/button";
 import Loader from "~/components/ui/loader";
 import Spacing from "~/components/ui/spacing";
 import Typography from "~/components/ui/typography";
 import { service } from "~/service";
-import { StoreType } from "~/services/store";
+import { ProductType } from "~/services/product";
 import { scrollAllDown } from "~/utils/scroll-all-down";
 import { withTryCatch } from "~/utils/with-try-catch";
 
-interface StoresSearchParams extends Params {
+interface ProductsSearchParams extends Params {
   query: string;
-  type: string;
 }
 
 export default function Stores() {
-  const [searchParams, setSearchParams] = useSearchParams<StoresSearchParams>();
+  const [searchParams, setSearchParams] =
+    useSearchParams<ProductsSearchParams>();
   const [page, setPage] = createSignal(1);
-  const [stores, setStores] = createSignal<StoreType[]>([]);
+  const [products, setProducts] = createSignal<ProductType[]>([]);
   const [inputSearchQuery, setInputSearchQuery] = createSignal("");
   const [searchQuery, setSearchQuery] = createSignal("");
-  const [activeStoreType, setActiveStoreType] = createSignal<string>(
-    searchParams.type ?? "all"
-  );
   const [searchInputInteraction, setSearchInputInteraction] =
     createSignal(false);
-  const filteredStores = () => {
-    return stores().filter((store) => {
-      if (activeStoreType() && activeStoreType() !== "all") {
-        return store.type === activeStoreType();
-      }
-      return true;
-    });
-  };
 
-  // TODO: keep this but add a resource in the top for getting stores in the server
-  async function loadStores() {
+  // TODO: keep this but add a resource in the top for getting products in the server
+  async function loadProducts() {
     const [response, error] = await withTryCatch(
-      service.store.getPaginatedStores,
+      service.product.getPaginatedProducts,
       page()
     );
-    setStores((prev) => (error ? [] : [...prev, ...response!]));
+    setProducts((prev) => (error ? [] : [...prev, ...response!]));
   }
 
-  async function searchStores(query: string) {
+  async function searchProducts(query: string) {
     if (!query) return;
 
     const [response, error] = await withTryCatch(
-      service.store.searchStores,
+      service.product.searchProducts,
       query
     );
-    setStores(error ? [] : response!);
+    setProducts(error ? [] : response!);
     setSearchParams({
       query,
-      type: activeStoreType(),
     });
     setSearchQuery(query);
   }
@@ -83,14 +71,14 @@ export default function Stores() {
     setSearchInputInteraction(true);
   }
 
-  async function loadMoreStores() {
+  async function loadMoreProducts() {
     setPage(page() + 1);
-    await loadStores();
+    await loadProducts();
     setTimeout(scrollAllDown, 500);
   }
 
   async function handleQuerySearchParam() {
-    await searchStores(searchParams.query!);
+    await searchProducts(searchParams.query!);
     setInputSearchQuery(searchParams.query ?? "");
     setSearchQuery(inputSearchQuery());
   }
@@ -101,15 +89,15 @@ export default function Stores() {
       return;
     }
 
-    loadStores();
+    loadProducts();
   });
 
   createEffect(
     on([inputSearchQuery, searchInputInteraction], () => {
       if (!inputSearchQuery() && searchInputInteraction()) {
         setPage(1);
-        setStores([]);
-        loadStores();
+        setProducts([]);
+        loadProducts();
         setSearchParams({
           query: inputSearchQuery(),
         });
@@ -118,49 +106,36 @@ export default function Stores() {
     })
   );
 
-  createEffect(
-    on(activeStoreType, () => {
-      setSearchParams({
-        query: inputSearchQuery(),
-        type: activeStoreType(),
-      });
-    })
-  );
-
   return (
     <>
-      <Title.Left>Stores</Title.Left>
+      <Title.Left>Products</Title.Left>
       <NavBar />
       <main>
         <Container>
           <Spacing.GapY size="section" class="mt-28">
-            <StoresHeader />
-            <StoresSearch
+            <ProductsHeader />
+            <ProductsSearch
               inputSearchQuery={inputSearchQuery}
               searchQuery={searchQuery}
-              searchStores={searchStores}
+              searchProducts={searchProducts}
               handleInputChange={handleInputChange}
-              activeStoreType={activeStoreType}
-              setActiveStoreType={setActiveStoreType}
             />
             <Show
-              when={filteredStores().length > 0}
+              when={products().length > 0}
               fallback={
                 <Typography.P>
-                  No stores found with{" "}
-                  {searchQuery() && `query '${searchQuery()}' and`} type '
-                  {activeStoreType()}'.
+                  No products found with query '{searchQuery()}'
                 </Typography.P>
               }
             >
               <Suspense fallback={<Loader />}>
-                <For each={filteredStores()}>
-                  {(store) => <HomeStoreCard {...store} />}
+                <For each={products()}>
+                  {(store) => <HomeProductCard {...store} />}
                 </For>
               </Suspense>
             </Show>
-            <Show when={stores().length > 0 && !searchQuery()}>
-              <Button class="w-full lg:w-fit" onClick={loadMoreStores}>
+            <Show when={products().length > 0 && !searchQuery()}>
+              <Button class="w-full lg:w-fit" onClick={loadMoreProducts}>
                 Load more
               </Button>
             </Show>
