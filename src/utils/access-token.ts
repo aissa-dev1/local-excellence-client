@@ -1,16 +1,16 @@
-export function getStorageAccessToken(): string | null {
+export function getAccessToken(): string | null {
   return localStorage.getItem("access_token");
 }
 
-export function setStorageAccessToken(token: string) {
+export function setAccessToken(token: string) {
   localStorage.setItem("access_token", token);
 }
 
-export function clearStorageAccessToken() {
+export function clearAccessToken() {
   localStorage.removeItem("access_token");
 }
 
-export function hasStorageAccessToken(): boolean {
-  const token = getStorageAccessToken();
+export function hasAccessToken(): boolean {
+  const token = getAccessToken();
   return typeof token === "string" && token !== "";
 }
