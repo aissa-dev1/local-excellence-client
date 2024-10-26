@@ -5,7 +5,7 @@ import { useToast } from "../use-toast";
 import { jwtDecode } from "jwt-decode";
 import { JWTUserType } from "~/features/user";
 import { useNavigate } from "@solidjs/router";
-import { setStorageAccessToken } from "~/utils/access-token";
+import { setAccessToken } from "~/utils/access-token";
 import { feature } from "~/feature";
 import { withTryCatch } from "~/utils/with-try-catch";
 
@@ -45,8 +45,7 @@ export function useLogin() {
       userName: decodedUser.userName,
       joinedAt: decodedUser.joinedAt,
     });
-    feature.auth.updateAccessToken(response!.accessToken);
-    setStorageAccessToken(response!.accessToken);
+    setAccessToken(response!.accessToken);
     feature.auth.updateIsAuthenticated(true);
     navigate("/dashboard");
   }
