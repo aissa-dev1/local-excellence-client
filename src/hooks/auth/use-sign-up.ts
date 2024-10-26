@@ -23,7 +23,7 @@ export function useSignUp() {
     if (signUpdata().loading) return;
 
     setSignUpData((prev) => ({ ...prev, loading: true }));
-    const [response, error] = await withTryCatch(service.auth.signUp, {
+    const [, error] = await withTryCatch(service.auth.signUp, {
       email: signUpdata().email,
       password: signUpdata().password,
       userName: signUpdata().userName,
