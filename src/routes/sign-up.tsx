@@ -11,9 +11,9 @@ import { JWTUserType } from "~/features/user";
 import { useSignUp } from "~/hooks/auth/use-sign-up";
 import { feature } from "~/feature";
 import {
-  clearStorageAccessToken,
-  getStorageAccessToken,
-  hasStorageAccessToken,
+  clearAccessToken,
+  getAccessToken,
+  hasAccessToken,
 } from "~/utils/access-token";
 
 export default function SignUp() {
@@ -24,12 +24,12 @@ export default function SignUp() {
     if (feature.auth.state().isAuthenticated) {
       navigate("/dashboard");
     }
-    if (hasStorageAccessToken()) {
+    if (hasAccessToken()) {
       try {
-        jwtDecode<JWTUserType & JwtPayload>(getStorageAccessToken()!);
+        jwtDecode<JWTUserType & JwtPayload>(getAccessToken()!);
         navigate("/dashboard");
       } catch (error) {
-        clearStorageAccessToken();
+        clearAccessToken();
         navigate("/sign-up");
       }
     } else navigate("/sign-up");
@@ -48,42 +48,49 @@ export default function SignUp() {
           />
           <Typography.H3>Sign up</Typography.H3>
         </Spacing.GapY>
-        <Spacing.GapY size="content-md" class="mt-12">
-          <Input
-            type="email"
-            placeholder="Email"
-            class="px-4 py-2.5"
-            value={signUpdata().email}
-            onchange={(e) =>
-              setSignUpData((prev) => ({ ...prev, email: e.target.value }))
-            }
-          />
-          <Input
-            type="password"
-            placeholder="Password"
-            class="px-4 py-2.5"
-            value={signUpdata().password}
-            onchange={(e) =>
-              setSignUpData((prev) => ({ ...prev, password: e.target.value }))
-            }
-          />
-          <Input
-            type="text"
-            placeholder="Name"
-            class="px-4 py-2.5"
-            value={signUpdata().userName}
-            onchange={(e) =>
-              setSignUpData((prev) => ({ ...prev, userName: e.target.value }))
-            }
-          />
-          <Button
-            class="py-2.5"
-            onClick={signUp}
-            disabled={signUpdata().loading}
-          >
-            Sign up
-          </Button>
-        </Spacing.GapY>
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            signUp();
+          }}
+        >
+          <Spacing.GapY size="content-md" class="mt-12">
+            <Input
+              type="email"
+              placeholder="Email"
+              class="px-4 py-2.5"
+              value={signUpdata().email}
+              onchange={(e) =>
+                setSignUpData((prev) => ({ ...prev, email: e.target.value }))
+              }
+            />
+            <Input
+              type="password"
+              placeholder="Password"
+              class="px-4 py-2.5"
+              value={signUpdata().password}
+              onchange={(e) =>
+                setSignUpData((prev) => ({ ...prev, password: e.target.value }))
+              }
+            />
+            <Input
+              type="text"
+              placeholder="Name"
+              class="px-4 py-2.5"
+              value={signUpdata().userName}
+              onchange={(e) =>
+                setSignUpData((prev) => ({ ...prev, userName: e.target.value }))
+              }
+            />
+            <Button
+              class="py-2.5"
+              onClick={signUp}
+              disabled={signUpdata().loading}
+            >
+              Sign up
+            </Button>
+          </Spacing.GapY>
+        </form>
         <Spacing.GapY size="content-md" class="mt-4 text-center">
           <Typography.P>
             By creating an account you agree to our{" "}

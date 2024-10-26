@@ -11,9 +11,9 @@ import { JWTUserType } from "~/features/user";
 import { useLogin } from "~/hooks/auth/use-login";
 import { feature } from "~/feature";
 import {
-  clearStorageAccessToken,
-  getStorageAccessToken,
-  hasStorageAccessToken,
+  clearAccessToken,
+  getAccessToken,
+  hasAccessToken,
 } from "~/utils/access-token";
 
 export default function Login() {
@@ -24,12 +24,12 @@ export default function Login() {
     if (feature.auth.state().isAuthenticated) {
       navigate("/dashboard");
     }
-    if (hasStorageAccessToken()) {
+    if (hasAccessToken()) {
       try {
-        jwtDecode<JWTUserType & JwtPayload>(getStorageAccessToken()!);
+        jwtDecode<JWTUserType & JwtPayload>(getAccessToken()!);
         navigate("/dashboard");
       } catch (error) {
-        clearStorageAccessToken();
+        clearAccessToken();
         navigate("/login");
       }
     } else navigate("/login");
@@ -48,29 +48,40 @@ export default function Login() {
           />
           <Typography.H3>Login</Typography.H3>
         </Spacing.GapY>
-        <Spacing.GapY size="content-md" class="mt-12">
-          <Input
-            type="email"
-            placeholder="Email"
-            class="px-4 py-2.5"
-            value={loginData().email}
-            onchange={(e) =>
-              setLoginData((prev) => ({ ...prev, email: e.target.value }))
-            }
-          />
-          <Input
-            type="password"
-            placeholder="Password"
-            class="px-4 py-2.5"
-            value={loginData().password}
-            onchange={(e) =>
-              setLoginData((prev) => ({ ...prev, password: e.target.value }))
-            }
-          />
-          <Button class="py-2.5" onClick={login} disabled={loginData().loading}>
-            Login
-          </Button>
-        </Spacing.GapY>
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            login();
+          }}
+        >
+          <Spacing.GapY size="content-md" class="mt-12">
+            <Input
+              type="email"
+              placeholder="Email"
+              class="px-4 py-2.5"
+              value={loginData().email}
+              onchange={(e) =>
+                setLoginData((prev) => ({ ...prev, email: e.target.value }))
+              }
+            />
+            <Input
+              type="password"
+              placeholder="Password"
+              class="px-4 py-2.5"
+              value={loginData().password}
+              onchange={(e) =>
+                setLoginData((prev) => ({ ...prev, password: e.target.value }))
+              }
+            />
+            <Button
+              class="py-2.5"
+              onClick={login}
+              disabled={loginData().loading}
+            >
+              Login
+            </Button>
+          </Spacing.GapY>
+        </form>
         <div class="mt-4 text-center">
           <Typography.P>
             Don't have an account?{" "}

@@ -12,9 +12,9 @@ import { JWTUserType } from "~/features/user";
 import { useToast } from "~/hooks/use-toast";
 import { feature } from "~/feature";
 import {
-  clearStorageAccessToken,
-  getStorageAccessToken,
-  hasStorageAccessToken,
+  clearAccessToken,
+  getAccessToken,
+  hasAccessToken,
 } from "~/utils/access-token";
 
 export default function Dashboard() {
@@ -22,15 +22,15 @@ export default function Dashboard() {
   const { addToast } = useToast();
 
   onMount(() => {
-    if (hasStorageAccessToken()) {
+    if (hasAccessToken()) {
       try {
         const decodedUser = jwtDecode<JWTUserType & JwtPayload>(
-          getStorageAccessToken()!
+          getAccessToken()!
         );
 
         if (Date.now() / 1000 >= decodedUser.exp!) {
           addToast("Your session has expired", { variant: "destructive" });
-          clearStorageAccessToken();
+          clearAccessToken();
           navigate("/login");
           return;
         }
@@ -43,7 +43,7 @@ export default function Dashboard() {
         });
         feature.auth.updateIsAuthenticated(true);
       } catch (error) {
-        clearStorageAccessToken();
+        clearAccessToken();
         navigate("/login");
       }
     } else navigate("/login");
@@ -70,7 +70,7 @@ export default function Dashboard() {
               <Button
                 onClick={() => {
                   feature.auth.updateIsAuthenticated(false);
-                  clearStorageAccessToken();
+                  clearAccessToken();
                   navigate("/login");
                 }}
               >
