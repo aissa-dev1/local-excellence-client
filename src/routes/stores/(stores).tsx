@@ -7,6 +7,7 @@ import {
   Suspense,
   createEffect,
   on,
+  createResource,
 } from "solid-js";
 import HomeStoreCard from "~/components/home/store-card";
 import Container from "~/components/reusable/container";
@@ -32,7 +33,13 @@ interface StoresSearchParams extends Params {
 export default function Stores() {
   const [searchParams, setSearchParams] = useSearchParams<StoresSearchParams>();
   const [page, setPage] = createSignal(1);
-  const [stores, setStores] = createSignal<StoreType[]>([]);
+  const [stores, { mutate: setStores }] = createResource(async () => {
+    const [response, error] = await withTryCatch(
+      service.store.getPaginatedStores,
+      page()
+    );
+    return error ? [] : response!;
+  });
   const [inputSearchQuery, setInputSearchQuery] = createSignal("");
   const [searchQuery, setSearchQuery] = createSignal("");
   const [activeStoreType, setActiveStoreType] = createSignal<string>(
@@ -41,7 +48,9 @@ export default function Stores() {
   const [searchInputInteraction, setSearchInputInteraction] =
     createSignal(false);
   const filteredStores = () => {
-    return stores().filter((store) => {
+    if (!stores()) return [];
+
+    return stores()!.filter((store) => {
       if (activeStoreType() && activeStoreType() !== "all") {
         return store.type === activeStoreType();
       }
@@ -49,13 +58,18 @@ export default function Stores() {
     });
   };
 
-  // TODO: keep this but add a resource in the top for getting stores in the server
   async function loadStores() {
     const [response, error] = await withTryCatch(
       service.store.getPaginatedStores,
       page()
     );
-    setStores((prev) => (error ? [] : [...prev, ...response!]));
+    setStores((prev) => (error ? [] : [...prev!, ...response!]));
+  }
+
+  async function loadMoreStores() {
+    setPage((prev) => prev + 1);
+    await loadStores();
+    setTimeout(scrollAllDown, 500);
   }
 
   async function searchStores(query: string) {
@@ -83,12 +97,6 @@ export default function Stores() {
     setSearchInputInteraction(true);
   }
 
-  async function loadMoreStores() {
-    setPage(page() + 1);
-    await loadStores();
-    setTimeout(scrollAllDown, 500);
-  }
-
   async function handleQuerySearchParam() {
     await searchStores(searchParams.query!);
     setInputSearchQuery(searchParams.query ?? "");
@@ -98,10 +106,7 @@ export default function Stores() {
   onMount(() => {
     if (searchParams.query) {
       handleQuerySearchParam();
-      return;
     }
-
-    loadStores();
   });
 
   createEffect(
@@ -159,7 +164,7 @@ export default function Stores() {
                 </For>
               </Suspense>
             </Show>
-            <Show when={stores().length > 0 && !searchQuery()}>
+            <Show when={stores() && stores()!.length > 0 && !searchQuery()}>
               <Button class="w-full lg:w-fit" onClick={loadMoreStores}>
                 Load more
               </Button>
