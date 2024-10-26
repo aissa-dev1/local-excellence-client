@@ -18,7 +18,7 @@ export default function HomeStores() {
   });
 
   return (
-    <Spacing.GapY size="content-lg">
+    <Spacing.GapY size="content-lg" id="home_stores">
       <Spacing.GapY size="content-sm">
         <Typography.H3>Stores</Typography.H3>
         <Spacing.GapY
