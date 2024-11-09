@@ -14,18 +14,18 @@ enum GapYSize {
 }
 
 function GapY(props: GapYProps) {
-  const [, rest] = splitProps(props, ["class", "children", "size"]);
+  const [local, rest] = splitProps(props, ["class", "children", "size"]);
 
   return (
     <div
       {...rest}
       class={cn(
         "flex flex-col",
-        GapYSize[props.size ? props.size : "default"],
-        props.class
+        GapYSize[local.size ? local.size : "default"],
+        local.class
       )}
     >
-      {props.children}
+      {local.children}
     </div>
   );
 }
@@ -43,18 +43,18 @@ enum GapXSize {
 }
 
 function GapX(props: GapXProps) {
-  const [, rest] = splitProps(props, ["class", "children", "size"]);
+  const [local, rest] = splitProps(props, ["class", "children", "size"]);
 
   return (
     <div
       {...rest}
       class={cn(
         "flex flex-row",
-        GapXSize[props.size ? props.size : "default"],
-        props.class
+        GapXSize[local.size ? local.size : "default"],
+        local.class
       )}
     >
-      {props.children}
+      {local.children}
     </div>
   );
 }

@@ -1,4 +1,4 @@
-import { createStore } from "solid-js/store";
+import { BaseFeature } from "./base-feature";
 
 interface UserFeatureState {
   id: string;
@@ -14,31 +14,13 @@ export interface JWTUserType {
   joinedAt: number;
 }
 
-export class UserFeature {
-  private readonly store = createStore<UserFeatureState>({
-    id: "",
-    email: "",
-    userName: "",
-    joinedAt: 0,
-  });
-
-  update(state: UserFeatureState) {
-    for (const stateKey in state) {
-      this.setStore(
-        stateKey as keyof UserFeatureState,
-        state[stateKey as keyof UserFeatureState]
-      );
-    }
-  }
-
-  state(): UserFeatureState {
-    return this.store[0];
-  }
-
-  private setStore<K extends keyof UserFeatureState>(
-    key: K,
-    value: UserFeatureState[K]
-  ) {
-    this.store[1](key, value);
+export class UserFeature extends BaseFeature<UserFeatureState> {
+  constructor() {
+    super({
+      id: "",
+      email: "",
+      userName: "",
+      joinedAt: 0,
+    });
   }
 }

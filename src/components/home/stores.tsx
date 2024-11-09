@@ -6,6 +6,7 @@ import HomeStoreCard from "./store-card";
 import { A } from "@solidjs/router";
 import { service } from "~/service";
 import { withTryCatch } from "~/utils/with-try-catch";
+import { feature } from "~/feature";
 
 export default function HomeStores() {
   const [homeStores] = createResource(async () => {
@@ -30,7 +31,22 @@ export default function HomeStores() {
             our service.
           </Typography.P>
           <Spacing.GapX size="content-md">
-            <Button>Create yours</Button>
+            <A
+              href={
+                feature.auth.state().isAuthenticated
+                  ? "/dashboard/create-store"
+                  : "/login"
+              }
+              onClick={() => {
+                if (!feature.auth.state().isAuthenticated) {
+                  feature.redirect.update({
+                    redirectTo: "/dashboard/create-store",
+                  });
+                }
+              }}
+            >
+              <Button>Create yours</Button>
+            </A>
             <Show when={homeStores() && homeStores()!.length > 0}>
               <A href="/stores">
                 <Button variant="outline">See more ({storesSize()})</Button>

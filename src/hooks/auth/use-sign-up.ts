@@ -1,37 +1,34 @@
 import { createSignal } from "solid-js";
 import { service } from "~/service";
 import { AuthSignUpData } from "~/services/auth";
-import { useToast } from "../use-toast";
 import { useLogin } from "./use-login";
 import { withTryCatch } from "~/utils/with-try-catch";
-
-interface UseSignUpData extends AuthSignUpData {
-  loading: boolean;
-}
+import { feature } from "~/feature";
 
 export function useSignUp() {
-  const [signUpdata, setSignUpData] = createSignal<UseSignUpData>({
+  const [signUpData, setSignUpData] = createSignal<
+    AuthSignUpData & { loading: boolean }
+  >({
     email: "",
     password: "",
     userName: "",
     loading: false,
   });
   const { setLoginData, login } = useLogin();
-  const { addToast } = useToast();
 
   async function signUp() {
-    if (signUpdata().loading) return;
+    if (signUpData().loading) return;
 
     setSignUpData((prev) => ({ ...prev, loading: true }));
     const [, error] = await withTryCatch(service.auth.signUp, {
-      email: signUpdata().email,
-      password: signUpdata().password,
-      userName: signUpdata().userName,
+      email: signUpData().email,
+      password: signUpData().password,
+      userName: signUpData().userName,
     });
 
     if (error) {
-      addToast(error.response.data.message, {
-        variant: "destructive",
+      feature.toast.addToast("Sign up failed", error.response.data.message, {
+        variant: "error",
       });
       setSignUpData((prev) => ({ ...prev, loading: false }));
       return;
@@ -39,11 +36,11 @@ export function useSignUp() {
 
     setLoginData((prev) => ({
       ...prev,
-      email: signUpdata().email,
-      password: signUpdata().password,
+      email: signUpData().email,
+      password: signUpData().password,
     }));
     await login();
   }
 
-  return { signUpdata, setSignUpData, signUp };
+  return { signUpData, setSignUpData, signUp };
 }

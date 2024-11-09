@@ -8,9 +8,10 @@ import { A } from "@solidjs/router";
 import { encodeStoreName } from "~/utils/store-name";
 import Carousel from "../ui/carousel";
 import { withTryCatch } from "~/utils/with-try-catch";
+import { feature } from "~/feature";
 
 export default function HomeSponsors() {
-  const [sponsors] = createResource(async () => {
+  const [sponsorsWithStores] = createResource(async () => {
     const [sponsorsResponse, sponsorsError] = await withTryCatch(
       service.sponsor.getSponsors
     );
@@ -19,7 +20,7 @@ export default function HomeSponsors() {
       return [];
     }
 
-    const sponsorsWithStore = await Promise.all(
+    const sponsorWithStoreList = await Promise.all(
       sponsorsResponse!.map(async (sponsor) => {
         const [storeResponse, storeError] = await withTryCatch(
           service.store.getStoreById,
@@ -29,7 +30,7 @@ export default function HomeSponsors() {
         return { ...sponsor, store: storeError ? null : storeResponse };
       })
     );
-    return sponsorsWithStore;
+    return sponsorWithStoreList;
   });
 
   return (
@@ -44,33 +45,50 @@ export default function HomeSponsors() {
             Partner with us to showcase your brand among our top sponsors. Your
             business could be featured here next.
           </Typography.P>
-          <Button class="w-full sm:w-fit">Make yours</Button>
+          <A
+            href={
+              feature.auth.state().isAuthenticated
+                ? "/dashboard/create-sponsor"
+                : "/login"
+            }
+            onClick={() => {
+              if (!feature.auth.state().isAuthenticated) {
+                feature.redirect.update({
+                  redirectTo: "/dashboard/create-sponsor",
+                });
+              }
+            }}
+          >
+            <Button class="w-full sm:w-fit">Make yours</Button>
+          </A>
         </Spacing.GapY>
       </Spacing.GapY>
       <Show
-        when={sponsors() && sponsors()!.length > 0}
+        when={sponsorsWithStores() && sponsorsWithStores()!.length > 0}
         fallback={<Typography.P>No sponsors to show.</Typography.P>}
       >
         <Carousel transitionEffect="fade">
-          <For each={sponsors()}>
-            {(sponsor, i) => (
+          <For each={sponsorsWithStores()}>
+            {(sponsorWithStore) => (
               <Card.Self
                 class="h-full min-h-[200px]"
                 style={{
-                  "background-color": sponsor.backgroundColor,
-                  color: sponsor.color,
+                  "background-color": sponsorWithStore.backgroundColor,
+                  color: sponsorWithStore.color,
                 }}
               >
                 <Card.Padded>
                   <Spacing.GapY size="content-md">
                     <Typography.H3>
-                      {sponsor.color} {i()}
+                      {sponsorWithStore.store?.name}
                     </Typography.H3>
-                    <Typography.P>{sponsor.description}</Typography.P>
+                    <Typography.P>{sponsorWithStore.description}</Typography.P>
                     <A
                       href={
-                        sponsor.store
-                          ? `/stores/${encodeStoreName(sponsor.store.name)}`
+                        sponsorWithStore.store
+                          ? `/stores/${encodeStoreName(
+                              sponsorWithStore.store.name
+                            )}`
                           : "/stores"
                       }
                       class="w-fit"

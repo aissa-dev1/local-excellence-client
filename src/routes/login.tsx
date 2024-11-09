@@ -1,6 +1,6 @@
-import { A, useNavigate } from "@solidjs/router";
+import { A, redirect, useNavigate, useSearchParams } from "@solidjs/router";
 import { jwtDecode, JwtPayload } from "jwt-decode";
-import { onMount } from "solid-js";
+import { onCleanup, onMount } from "solid-js";
 import NavBar from "~/components/reusable/nav-bar";
 import Title from "~/components/reusable/title";
 import Button from "~/components/ui/button";
@@ -15,25 +15,55 @@ import {
   getAccessToken,
   hasAccessToken,
 } from "~/utils/access-token";
+import { withTryCatch } from "~/utils/with-try-catch";
+import { DOMElement } from "solid-js/jsx-runtime";
 
 export default function Login() {
   const { loginData, setLoginData, login } = useLogin();
   const navigate = useNavigate();
 
-  onMount(() => {
+  onMount(async () => {
     if (feature.auth.state().isAuthenticated) {
       navigate("/dashboard");
+      return;
     }
-    if (hasAccessToken()) {
-      try {
-        jwtDecode<JWTUserType & JwtPayload>(getAccessToken()!);
-        navigate("/dashboard");
-      } catch (error) {
-        clearAccessToken();
-        navigate("/login");
-      }
-    } else navigate("/login");
+    if (!hasAccessToken()) {
+      navigate("/login");
+      return;
+    }
+
+    const [, error] = await withTryCatch(async () => {
+      return jwtDecode<JWTUserType & JwtPayload>(getAccessToken()!);
+    });
+
+    if (error) {
+      clearAccessToken();
+      navigate("/login");
+      return;
+    }
+
+    navigate("/dashboard");
   });
+
+  function handleChange(
+    e: Event & {
+      currentTarget: HTMLInputElement | HTMLTextAreaElement;
+      target: HTMLInputElement | HTMLTextAreaElement;
+    }
+  ) {
+    const { name, value } = e.target;
+    setLoginData((prev) => ({ ...prev, [name]: value }));
+  }
+
+  function handleSubmit(
+    e: SubmitEvent & {
+      currentTarget: HTMLFormElement;
+      target: DOMElement;
+    }
+  ) {
+    e.preventDefault();
+    login();
+  }
 
   return (
     <>
@@ -48,36 +78,25 @@ export default function Login() {
           />
           <Typography.H3>Login</Typography.H3>
         </Spacing.GapY>
-        <form
-          onSubmit={(e) => {
-            e.preventDefault();
-            login();
-          }}
-        >
+        <form onSubmit={handleSubmit}>
           <Spacing.GapY size="content-md" class="mt-12">
             <Input
               type="email"
+              name="email"
               placeholder="Email"
               class="px-4 py-2.5"
               value={loginData().email}
-              onchange={(e) =>
-                setLoginData((prev) => ({ ...prev, email: e.target.value }))
-              }
+              onchange={handleChange}
             />
             <Input
               type="password"
+              name="password"
               placeholder="Password"
               class="px-4 py-2.5"
               value={loginData().password}
-              onchange={(e) =>
-                setLoginData((prev) => ({ ...prev, password: e.target.value }))
-              }
+              onchange={handleChange}
             />
-            <Button
-              class="py-2.5"
-              onClick={login}
-              disabled={loginData().loading}
-            >
+            <Button class="py-2.5" type="submit" disabled={loginData().loading}>
               Login
             </Button>
           </Spacing.GapY>

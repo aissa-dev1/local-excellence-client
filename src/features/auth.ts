@@ -1,26 +1,13 @@
-import { createStore } from "solid-js/store";
+import { BaseFeature } from "./base-feature";
 
 interface AuthFeatureState {
   isAuthenticated: boolean;
 }
 
-export class AuthFeature {
-  private readonly store = createStore<AuthFeatureState>({
-    isAuthenticated: false,
-  });
-
-  updateIsAuthenticated(authenticated: boolean) {
-    this.setStore("isAuthenticated", authenticated);
-  }
-
-  state(): AuthFeatureState {
-    return this.store[0];
-  }
-
-  private setStore<K extends keyof AuthFeatureState>(
-    key: K,
-    value: AuthFeatureState[K]
-  ) {
-    this.store[1](key, value);
+export class AuthFeature extends BaseFeature<AuthFeatureState> {
+  constructor() {
+    super({
+      isAuthenticated: false,
+    });
   }
 }

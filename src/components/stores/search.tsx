@@ -40,7 +40,12 @@ export default function StoresSearch(props: StoresSearchProps) {
           value={props.inputSearchQuery()}
           onInput={props.handleInputChange}
         />
-        <Button class="w-full lg:w-fit">Search</Button>
+        <Button
+          class="w-full lg:w-fit"
+          onClick={() => props.searchStores(props.inputSearchQuery())}
+        >
+          Search
+        </Button>
       </form>
       <SearchFilters
         activeStoreType={props.activeStoreType}

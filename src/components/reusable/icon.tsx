@@ -2,7 +2,7 @@ import { ComponentProps, splitProps } from "solid-js";
 import { cn } from "../../utils/cn";
 
 function MoonIcon(props: ComponentProps<"svg">) {
-  const [, rest] = splitProps(props, ["class", "children"]);
+  const [local, rest] = splitProps(props, ["class", "children"]);
 
   return (
     <svg
@@ -12,7 +12,7 @@ function MoonIcon(props: ComponentProps<"svg">) {
       viewBox="0 0 24 24"
       stroke-width={1.5}
       stroke="currentColor"
-      class={cn("size-6", props.class)}
+      class={cn("size-6", local.class)}
     >
       <path
         stroke-linecap="round"
@@ -24,7 +24,7 @@ function MoonIcon(props: ComponentProps<"svg">) {
 }
 
 function SunIcon(props: ComponentProps<"svg">) {
-  const [, rest] = splitProps(props, ["class", "children"]);
+  const [local, rest] = splitProps(props, ["class", "children"]);
 
   return (
     <svg
@@ -34,7 +34,7 @@ function SunIcon(props: ComponentProps<"svg">) {
       viewBox="0 0 24 24"
       stroke-width={1.5}
       stroke="currentColor"
-      class={cn("size-6", props.class)}
+      class={cn("size-6", local.class)}
     >
       <path
         stroke-linecap="round"
@@ -45,9 +45,101 @@ function SunIcon(props: ComponentProps<"svg">) {
   );
 }
 
+function SliderIcon(props: ComponentProps<"svg">) {
+  const [local, rest] = splitProps(props, ["class", "children"]);
+
+  return (
+    <svg
+      {...rest}
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke-width={1.5}
+      stroke="currentColor"
+      class={cn("size-6", local.class)}
+    >
+      <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        d="M10.5 6h9.75M10.5 6a1.5 1.5 0 1 1-3 0m3 0a1.5 1.5 0 1 0-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m-9.75 0h9.75"
+      />
+    </svg>
+  );
+}
+
+function XMarkIcon(props: ComponentProps<"svg">) {
+  const [local, rest] = splitProps(props, ["class", "children"]);
+
+  return (
+    <svg
+      {...rest}
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke-width={1.5}
+      stroke="currentColor"
+      class={cn("size-6", local.class)}
+    >
+      <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        d="M6 18 18 6M6 6l12 12"
+      />
+    </svg>
+  );
+}
+
+function ChevronUpIcon(props: ComponentProps<"svg">) {
+  const [local, rest] = splitProps(props, ["class", "children"]);
+
+  return (
+    <svg
+      {...rest}
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke-width={1.5}
+      stroke="currentColor"
+      class={cn("size-6", local.class)}
+    >
+      <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        d="m4.5 15.75 7.5-7.5 7.5 7.5"
+      />
+    </svg>
+  );
+}
+
+function ChevronDownIcon(props: ComponentProps<"svg">) {
+  const [local, rest] = splitProps(props, ["class", "children"]);
+
+  return (
+    <svg
+      {...rest}
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke-width={1.5}
+      stroke="currentColor"
+      class={cn("size-6", local.class)}
+    >
+      <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        d="m19.5 8.25-7.5 7.5-7.5-7.5"
+      />
+    </svg>
+  );
+}
+
 const Icon = {
   Moon: MoonIcon,
   Sun: SunIcon,
+  Slider: SliderIcon,
+  XMark: XMarkIcon,
+  ChevronUp: ChevronUpIcon,
+  ChevronDown: ChevronDownIcon,
 };
 
 export default Icon;

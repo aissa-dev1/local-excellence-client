@@ -37,7 +37,12 @@ export default function ProductsSearch(props: ProductsSearchProps) {
           value={props.inputSearchQuery()}
           onInput={props.handleInputChange}
         />
-        <Button class="w-full lg:w-fit">Search</Button>
+        <Button
+          class="w-full lg:w-fit"
+          onClick={() => props.searchProducts(props.inputSearchQuery())}
+        >
+          Search
+        </Button>
       </form>
     </Spacing.GapY>
   );

@@ -24,6 +24,9 @@
     --input: 240 5.9% 90%;
     --ring: 240 10% 3.9%;
     --radius: 0.5rem;
+    --sheet: 221 36% 11%;
+    --sheet-foreground: 0 0% 98%;
+    --dropdown-item-primary: 217, 91%, 60%;
   }
   .dark {
     --background: 218, 13%, 12%;

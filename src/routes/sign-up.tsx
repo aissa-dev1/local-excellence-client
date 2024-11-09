@@ -15,25 +15,55 @@ import {
   getAccessToken,
   hasAccessToken,
 } from "~/utils/access-token";
+import { withTryCatch } from "~/utils/with-try-catch";
+import { DOMElement } from "solid-js/jsx-runtime";
 
 export default function SignUp() {
-  const { signUpdata, setSignUpData, signUp } = useSignUp();
+  const { signUpData, setSignUpData, signUp } = useSignUp();
   const navigate = useNavigate();
 
-  onMount(() => {
+  onMount(async () => {
     if (feature.auth.state().isAuthenticated) {
       navigate("/dashboard");
+      return;
     }
-    if (hasAccessToken()) {
-      try {
-        jwtDecode<JWTUserType & JwtPayload>(getAccessToken()!);
-        navigate("/dashboard");
-      } catch (error) {
-        clearAccessToken();
-        navigate("/sign-up");
-      }
-    } else navigate("/sign-up");
+    if (!hasAccessToken()) {
+      navigate("/sign-up");
+      return;
+    }
+
+    const [, error] = await withTryCatch(async () => {
+      return jwtDecode<JWTUserType & JwtPayload>(getAccessToken()!);
+    });
+
+    if (error) {
+      clearAccessToken();
+      navigate("/sign-up");
+      return;
+    }
+
+    navigate("/dashboard");
   });
+
+  function handleChange(
+    e: Event & {
+      currentTarget: HTMLInputElement | HTMLTextAreaElement;
+      target: HTMLInputElement | HTMLTextAreaElement;
+    }
+  ) {
+    const { name, value } = e.target;
+    setSignUpData((prev) => ({ ...prev, [name]: value }));
+  }
+
+  function handleSubmit(
+    e: SubmitEvent & {
+      currentTarget: HTMLFormElement;
+      target: DOMElement;
+    }
+  ) {
+    e.preventDefault();
+    signUp();
+  }
 
   return (
     <>
@@ -48,44 +78,36 @@ export default function SignUp() {
           />
           <Typography.H3>Sign up</Typography.H3>
         </Spacing.GapY>
-        <form
-          onSubmit={(e) => {
-            e.preventDefault();
-            signUp();
-          }}
-        >
+        <form onSubmit={handleSubmit}>
           <Spacing.GapY size="content-md" class="mt-12">
             <Input
               type="email"
+              name="email"
               placeholder="Email"
               class="px-4 py-2.5"
-              value={signUpdata().email}
-              onchange={(e) =>
-                setSignUpData((prev) => ({ ...prev, email: e.target.value }))
-              }
+              value={signUpData().email}
+              onchange={handleChange}
             />
             <Input
               type="password"
+              name="password"
               placeholder="Password"
               class="px-4 py-2.5"
-              value={signUpdata().password}
-              onchange={(e) =>
-                setSignUpData((prev) => ({ ...prev, password: e.target.value }))
-              }
+              value={signUpData().password}
+              onchange={handleChange}
             />
             <Input
               type="text"
+              name="userName"
               placeholder="Name"
               class="px-4 py-2.5"
-              value={signUpdata().userName}
-              onchange={(e) =>
-                setSignUpData((prev) => ({ ...prev, userName: e.target.value }))
-              }
+              value={signUpData().userName}
+              onchange={handleChange}
             />
             <Button
               class="py-2.5"
-              onClick={signUp}
-              disabled={signUpdata().loading}
+              type="submit"
+              disabled={signUpData().loading}
             >
               Sign up
             </Button>

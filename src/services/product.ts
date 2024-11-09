@@ -1,4 +1,5 @@
 import axios from "axios";
+import { getAccessToken } from "~/utils/access-token";
 import { getApiUrl } from "~/utils/get-api-url";
 
 export interface ProductType {
@@ -6,8 +7,15 @@ export interface ProductType {
   storeId: string;
   name: string;
   description: string;
-  price: number;
+  price: string;
   createdAt: number;
+}
+
+export interface CreateProductData {
+  storeId: string;
+  name: string;
+  description: string;
+  price: string;
 }
 
 export class ProductService {
@@ -52,6 +60,15 @@ export class ProductService {
 
   async getProductById(id: string): Promise<ProductType> {
     const response = await axios.get(`${getApiUrl("products")}/id/${id}`);
+    return response.data;
+  }
+
+  async createProduct(data: CreateProductData): Promise<string> {
+    const response = await axios.post(getApiUrl("products"), data, {
+      headers: {
+        Authorization: `Bearer ${getAccessToken()}`,
+      },
+    });
     return response.data;
   }
 }

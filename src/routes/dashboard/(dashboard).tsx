@@ -1,86 +1,149 @@
-import { A, useNavigate } from "@solidjs/router";
-import { jwtDecode, JwtPayload } from "jwt-decode";
-import { onMount } from "solid-js";
+import { A } from "@solidjs/router";
+import { createEffect, createSignal, For, Show, Suspense } from "solid-js";
+import DashboardAuthGuard from "~/components/dashboard/auth-guard";
+import DashboardHeader from "~/components/dashboard/header";
+import HomeProductCard from "~/components/home/product-card";
+import HomeStoreCard from "~/components/home/store-card";
 import Container from "~/components/reusable/container";
 import Footer from "~/components/reusable/footer";
-import NavBar from "~/components/reusable/nav-bar";
 import Title from "~/components/reusable/title";
 import Button from "~/components/ui/button";
+import Card from "~/components/ui/card";
+import Loader from "~/components/ui/loader";
 import Spacing from "~/components/ui/spacing";
 import Typography from "~/components/ui/typography";
-import { JWTUserType } from "~/features/user";
-import { useToast } from "~/hooks/use-toast";
 import { feature } from "~/feature";
-import {
-  clearAccessToken,
-  getAccessToken,
-  hasAccessToken,
-} from "~/utils/access-token";
+import { service } from "~/service";
+import { ProductType } from "~/services/product";
+import { SponsorType } from "~/services/sponsor";
+import { StoreType } from "~/services/store";
+import { encodeStoreName } from "~/utils/store-name";
+import { withTryCatch } from "~/utils/with-try-catch";
 
 export default function Dashboard() {
-  const navigate = useNavigate();
-  const { addToast } = useToast();
+  const [stores, setStores] = createSignal<StoreType[]>([]);
+  const [sponsorsWithStores, setSponsorsWithStores] = createSignal<
+    (SponsorType & { store: StoreType })[]
+  >([]);
+  const [products, setProducts] = createSignal<ProductType[]>([]);
 
-  onMount(() => {
-    if (hasAccessToken()) {
-      try {
-        const decodedUser = jwtDecode<JWTUserType & JwtPayload>(
-          getAccessToken()!
-        );
+  createEffect(async () => {
+    const [storesResponse, storesError] = await withTryCatch(
+      service.store.getStoresByUserId,
+      feature.user.state().id
+    );
+    setStores(storesError ? [] : storesResponse!);
+    for (const store of stores()) {
+      const [sponsorResponse, sponsorError] = await withTryCatch(
+        service.sponsor.getSponsorByStoreId,
+        store._id
+      );
 
-        if (Date.now() / 1000 >= decodedUser.exp!) {
-          addToast("Your session has expired", { variant: "destructive" });
-          clearAccessToken();
-          navigate("/login");
-          return;
-        }
-
-        feature.user.update({
-          id: decodedUser.sub,
-          email: decodedUser.email,
-          userName: decodedUser.userName,
-          joinedAt: decodedUser.joinedAt,
-        });
-        feature.auth.updateIsAuthenticated(true);
-      } catch (error) {
-        clearAccessToken();
-        navigate("/login");
+      if (!sponsorError && sponsorResponse) {
+        setSponsorsWithStores((prev) => [
+          ...prev,
+          {
+            ...sponsorResponse!,
+            store,
+          },
+        ]);
       }
-    } else navigate("/login");
-    if (!feature.auth.state().isAuthenticated) {
-      navigate("/");
+
+      const [productsResponse, productsError] = await withTryCatch(
+        service.product.getProductsByStoreId,
+        store._id
+      );
+      setProducts(
+        productsError ? [] : (prev) => [...prev, ...productsResponse!]
+      );
     }
   });
 
   return (
-    <>
+    <DashboardAuthGuard>
       <Title.Left>Dashboard</Title.Left>
-      <NavBar />
+      <DashboardHeader />
       <main>
         <Container>
           <Spacing.GapY size="section" class="mt-28">
-            <div>
-              <Typography.H1>Dashboard</Typography.H1>
-              <Typography.H3>
-                Welcome {feature.user.state().userName}
-              </Typography.H3>
-              <Typography.H3>Id {feature.user.state().id}</Typography.H3>
-              <Typography.H3>Email {feature.user.state().email}</Typography.H3>
+            <Spacing.GapY size="content-md">
+              <Typography.H1>Hi {feature.user.state().userName}!</Typography.H1>
               <A href="/">Home</A>
-              <Button
-                onClick={() => {
-                  feature.auth.updateIsAuthenticated(false);
-                  clearAccessToken();
-                  navigate("/login");
-                }}
-              >
-                Sign Out
-              </Button>
-            </div>
+            </Spacing.GapY>
+            <Spacing.GapY size="content-md">
+              <Typography.H1>Sponsors</Typography.H1>
+              <Suspense fallback={<Loader />}>
+                <Show
+                  when={sponsorsWithStores().length > 0}
+                  fallback={<Typography.P>No sponsors to show</Typography.P>}
+                >
+                  <For each={sponsorsWithStores()}>
+                    {(sponsorWithStore) => (
+                      <Card.Self
+                        class="h-full min-h-[200px]"
+                        style={{
+                          "background-color": sponsorWithStore.backgroundColor,
+                          color: sponsorWithStore.color,
+                        }}
+                      >
+                        <Card.Padded>
+                          <Spacing.GapY size="content-md">
+                            <Typography.H3>
+                              {sponsorWithStore.store.name}
+                            </Typography.H3>
+                            <Typography.P>
+                              {sponsorWithStore.description}
+                            </Typography.P>
+                            <A
+                              href={
+                                sponsorWithStore.store
+                                  ? `/stores/${encodeStoreName(
+                                      sponsorWithStore.store.name
+                                    )}`
+                                  : "/stores"
+                              }
+                              class="w-fit"
+                            >
+                              <Button>Explore</Button>
+                            </A>
+                          </Spacing.GapY>
+                        </Card.Padded>
+                      </Card.Self>
+                    )}
+                  </For>
+                </Show>
+              </Suspense>
+            </Spacing.GapY>
+            <Spacing.GapY size="content-md">
+              <Typography.H1>Stores</Typography.H1>
+              <Suspense fallback={<Loader />}>
+                <Show
+                  when={stores().length > 0}
+                  fallback={<Typography.P>No stores to show</Typography.P>}
+                >
+                  <For each={stores()}>
+                    {(store) => <HomeStoreCard {...store} />}
+                  </For>
+                </Show>
+              </Suspense>
+            </Spacing.GapY>
+            <Spacing.GapY size="content-md">
+              <Typography.H1>Products</Typography.H1>
+              <Suspense fallback={<Loader />}>
+                <Show
+                  when={products().length > 0}
+                  fallback={<Typography.P>No products to show</Typography.P>}
+                >
+                  <For each={products()}>
+                    {(product) => <HomeProductCard {...product} />}
+                  </For>
+                </Show>
+              </Suspense>
+            </Spacing.GapY>
           </Spacing.GapY>
         </Container>
       </main>
       <Footer class="mt-12" />
-    </>
+    </DashboardAuthGuard>
   );
 }

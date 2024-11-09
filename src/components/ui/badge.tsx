@@ -14,27 +14,27 @@ export interface BadgeProps extends ComponentProps<"div"> {
 }
 
 export default function Badge(props: BadgeProps) {
-  const [, rest] = splitProps(props, [
+  const [local, rest] = splitProps(props, [
     "class",
     "children",
     "variant",
     "rounded",
   ]);
-  const rounded = typeof props.rounded !== "undefined" ? props.rounded : true;
+  const rounded = typeof local.rounded !== "undefined" ? local.rounded : true;
 
   return (
     <div
       {...rest}
       class={cn(
         "inline-flex items-center rounded-md border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2",
-        BadgeVariants[props.variant ? props.variant : "default"],
+        BadgeVariants[local.variant ? local.variant : "default"],
         {
           "rounded-none": !rounded,
         },
-        props.class
+        local.class
       )}
     >
-      {props.children}
+      {local.children}
     </div>
   );
 }

@@ -6,6 +6,7 @@ import Typography from "../ui/typography";
 import Button from "../ui/button";
 import { A } from "@solidjs/router";
 import HomeProductCard from "./product-card";
+import { feature } from "~/feature";
 
 export default function HomeProducts() {
   const [homeProducts] = createResource(async () => {
@@ -34,7 +35,22 @@ export default function HomeProducts() {
             to our service.
           </Typography.P>
           <Spacing.GapX size="content-md">
-            <Button>Create yours</Button>
+            <A
+              href={
+                feature.auth.state().isAuthenticated
+                  ? "/dashboard/create-product"
+                  : "/login"
+              }
+              onClick={() => {
+                if (!feature.auth.state().isAuthenticated) {
+                  feature.redirect.update({
+                    redirectTo: "/dashboard/create-product",
+                  });
+                }
+              }}
+            >
+              <Button>Create yours</Button>
+            </A>{" "}
             <Show when={homeProducts() && homeProducts()!.length > 0}>
               <A href="/products">
                 <Button variant="outline">See more ({productsSize()})</Button>

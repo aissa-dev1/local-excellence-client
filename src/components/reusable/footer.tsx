@@ -6,12 +6,12 @@ import Typography from "../ui/typography";
 interface FooterProps extends Omit<ComponentProps<"div">, "children"> {}
 
 export default function Footer(props: FooterProps) {
-  const [, rest] = splitProps(props, ["class"]);
+  const [local, rest] = splitProps(props, ["class"]);
   const publishYear = 2024;
   const currentYear = new Date().getFullYear();
 
   return (
-    <div {...rest} class={cn(props.class)}>
+    <div {...rest} class={cn(local.class)}>
       <Container class="bg-card border border-border text-foreground py-3 px-4 rounded-none sm:rounded-t-md">
         <Typography.P>
           Copyright ©{" "}

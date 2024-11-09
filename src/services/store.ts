@@ -1,4 +1,5 @@
 import axios from "axios";
+import { getAccessToken } from "~/utils/access-token";
 import { getApiUrl } from "~/utils/get-api-url";
 
 export interface StoreType {
@@ -8,6 +9,12 @@ export interface StoreType {
   description: string;
   type: string;
   createdAt: number;
+}
+
+export interface CreateStoreData {
+  name: string;
+  description: string;
+  type: string;
 }
 
 export class StoreService {
@@ -36,6 +43,11 @@ export class StoreService {
     return response.data;
   }
 
+  async getStoresByUserId(id: string): Promise<StoreType[]> {
+    const response = await axios.get(`${getApiUrl("stores")}/userId/${id}`);
+    return response.data;
+  }
+
   async getStoreByName(name: string): Promise<StoreType> {
     const response = await axios.get(`${getApiUrl("stores")}/name/${name}`);
     return response.data;
@@ -55,6 +67,15 @@ export class StoreService {
     const response = await axios.post(
       `${getApiUrl("stores")}/search?query=${query}`
     );
+    return response.data;
+  }
+
+  async createStore(data: CreateStoreData): Promise<string> {
+    const response = await axios.post(getApiUrl("stores"), data, {
+      headers: {
+        Authorization: `Bearer ${getAccessToken()}`,
+      },
+    });
     return response.data;
   }
 }
