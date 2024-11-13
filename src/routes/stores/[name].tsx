@@ -1,17 +1,21 @@
 import { A, useNavigate, useParams } from "@solidjs/router";
 import { createSignal, For, onMount, Show, Suspense } from "solid-js";
 import HomeProductCard from "~/components/home/product-card";
+import AuthCheck from "~/components/reusable/auth-check";
 import Container from "~/components/reusable/container";
 import Footer from "~/components/reusable/footer";
 import NavBar from "~/components/reusable/nav-bar";
 import Title from "~/components/reusable/title";
+import Flex from "~/components/ui/flex";
 import Loader from "~/components/ui/loader";
-import Spacing from "~/components/ui/spacing";
 import Typography from "~/components/ui/typography";
+import { useAdvancedTranslation } from "~/hooks/use-translation";
 import { service } from "~/service";
 import { ProductType } from "~/services/product";
 import { StoreType } from "~/services/store";
 import { UserType } from "~/services/user";
+import { storeTranslation } from "~/translations/pages/store";
+import { linksTranslation } from "~/translations/reusable/links";
 import { withTryCatch } from "~/utils/with-try-catch";
 
 export default function Store() {
@@ -31,6 +35,12 @@ export default function Store() {
     joinedAt: 0,
   });
   const [storeProducts, setStoreProducts] = createSignal<ProductType[]>([]);
+  const translation = useAdvancedTranslation([
+    {
+      store: storeTranslation,
+      links: linksTranslation,
+    },
+  ]);
 
   onMount(async () => {
     const [storeResponse, storeError] = await withTryCatch(
@@ -63,27 +73,29 @@ export default function Store() {
   });
 
   return (
-    <>
+    <AuthCheck>
       <Title.Self>{store().name} | Stores</Title.Self>
       <NavBar />
       <main>
         <Container>
-          <Spacing.GapY size="section" class="mt-28">
+          <Flex direction="column" gap="2xl" class="mt-28">
             <Show when={store()}>
-              <Spacing.GapY size="content-sm">
-                <div class="flex items-center justify-between">
+              <Flex direction="column" gap="sm">
+                <Flex items="center" justify="between">
                   <Typography.H1>{store().name}</Typography.H1>
-                  <Typography.H3>By {storeUser().userName}</Typography.H3>
-                </div>
+                  <Typography.H3>{storeUser().userName}</Typography.H3>
+                </Flex>
                 <Typography.P>{store().description}</Typography.P>
-              </Spacing.GapY>
+              </Flex>
             </Show>
-            <Spacing.GapY size="content-sm">
-              <Typography.P>Products</Typography.P>
+            <Flex direction="column" gap="sm">
+              <Typography.P>{translation("links").products}</Typography.P>
               <Show
                 when={storeProducts().length > 0}
                 fallback={
-                  <Typography.P>{store().name} has no products</Typography.P>
+                  <Typography.P>
+                    {store().name} {translation("store").hasNoProducts}
+                  </Typography.P>
                 }
               >
                 <Suspense fallback={<Loader />}>
@@ -92,15 +104,11 @@ export default function Store() {
                   </For>
                 </Suspense>
               </Show>
-            </Spacing.GapY>
-            <Spacing.GapX size="content-md">
-              <A href="/stores">Stores</A>
-              <A href="/">Home</A>
-            </Spacing.GapX>
-          </Spacing.GapY>
+            </Flex>
+          </Flex>
         </Container>
       </main>
       <Footer class="mt-12" />
-    </>
+    </AuthCheck>
   );
 }

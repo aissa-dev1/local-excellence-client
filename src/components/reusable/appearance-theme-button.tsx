@@ -7,7 +7,7 @@ export default function AppearanceThemeButton() {
 
   return (
     <Button
-      variant={theme() === "dark" ? "outline" : "default"}
+      variant="default"
       size="icon"
       onClick={() => {
         feature.appearance.update({

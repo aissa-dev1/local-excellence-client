@@ -1,11 +1,10 @@
-import { A, redirect, useNavigate, useSearchParams } from "@solidjs/router";
+import { A, useNavigate } from "@solidjs/router";
 import { jwtDecode, JwtPayload } from "jwt-decode";
-import { onCleanup, onMount } from "solid-js";
+import { onMount } from "solid-js";
 import NavBar from "~/components/reusable/nav-bar";
 import Title from "~/components/reusable/title";
 import Button from "~/components/ui/button";
 import Input from "~/components/ui/input";
-import Spacing from "~/components/ui/spacing";
 import Typography from "~/components/ui/typography";
 import { JWTUserType } from "~/features/user";
 import { useLogin } from "~/hooks/auth/use-login";
@@ -17,10 +16,22 @@ import {
 } from "~/utils/access-token";
 import { withTryCatch } from "~/utils/with-try-catch";
 import { DOMElement } from "solid-js/jsx-runtime";
+import Flex from "~/components/ui/flex";
+import { useAdvancedTranslation } from "~/hooks/use-translation";
+import { linksTranslation } from "~/translations/reusable/links";
+import { authTranslation } from "~/translations/reusable/auth";
+import { loginTranslation } from "~/translations/pages/login";
 
 export default function Login() {
   const { loginData, setLoginData, login } = useLogin();
   const navigate = useNavigate();
+  const translation = useAdvancedTranslation([
+    {
+      links: linksTranslation,
+      auth: authTranslation,
+      login: loginTranslation,
+    },
+  ]);
 
   onMount(async () => {
     if (feature.auth.state().isAuthenticated) {
@@ -70,42 +81,40 @@ export default function Login() {
       <Title.Right>Login</Title.Right>
       <NavBar />
       <div class="absolute -translate-x-1/2 -translate-y-1/2 left-1/2 top-1/2 w-[325px]">
-        <Spacing.GapY size="content-lg" class="items-center justify-center">
+        <Flex direction="column" items="center" justify="center" gap="lg">
           <img
             class="w-28"
             src="/local-excellence.png"
             alt="Local Excellence"
           />
-          <Typography.H3>Login</Typography.H3>
-        </Spacing.GapY>
+          <Typography.H3>{translation("links").login}</Typography.H3>
+        </Flex>
         <form onSubmit={handleSubmit}>
-          <Spacing.GapY size="content-md" class="mt-12">
+          <Flex direction="column" gap="md" class="mt-12">
             <Input
               type="email"
               name="email"
-              placeholder="Email"
-              class="px-4 py-2.5"
+              placeholder={translation("auth").email}
               value={loginData().email}
               onchange={handleChange}
             />
             <Input
               type="password"
               name="password"
-              placeholder="Password"
-              class="px-4 py-2.5"
+              placeholder={translation("auth").password}
               value={loginData().password}
               onchange={handleChange}
             />
-            <Button class="py-2.5" type="submit" disabled={loginData().loading}>
-              Login
+            <Button type="submit" disabled={loginData().loading}>
+              {translation("links").login}
             </Button>
-          </Spacing.GapY>
+          </Flex>
         </form>
         <div class="mt-4 text-center">
           <Typography.P>
-            Don't have an account?{" "}
+            {translation("login").noAccountText}{" "}
             <A href="/sign-up">
-              <strong>Sign up</strong>
+              <strong>{translation("links").signUp}</strong>
             </A>
           </Typography.P>
         </div>

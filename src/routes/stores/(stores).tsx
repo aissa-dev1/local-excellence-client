@@ -10,6 +10,7 @@ import {
   createResource,
 } from "solid-js";
 import HomeStoreCard from "~/components/home/store-card";
+import AuthCheck from "~/components/reusable/auth-check";
 import Container from "~/components/reusable/container";
 import Footer from "~/components/reusable/footer";
 import NavBar from "~/components/reusable/nav-bar";
@@ -17,11 +18,12 @@ import Title from "~/components/reusable/title";
 import StoresHeader from "~/components/stores/header";
 import StoresSearch from "~/components/stores/search";
 import Button from "~/components/ui/button";
+import Flex from "~/components/ui/flex";
 import Loader from "~/components/ui/loader";
-import Spacing from "~/components/ui/spacing";
 import Typography from "~/components/ui/typography";
+import { useTranslation } from "~/hooks/use-translation";
 import { service } from "~/service";
-import { StoreType } from "~/services/store";
+import { storesTranslation } from "~/translations/pages/stores";
 import { scrollAllDown } from "~/utils/scroll-all-down";
 import { withTryCatch } from "~/utils/with-try-catch";
 
@@ -57,6 +59,7 @@ export default function Stores() {
       return true;
     });
   };
+  const translation = useTranslation(storesTranslation);
 
   async function loadStores() {
     const [response, error] = await withTryCatch(
@@ -133,12 +136,12 @@ export default function Stores() {
   );
 
   return (
-    <>
+    <AuthCheck>
       <Title.Left>Stores</Title.Left>
       <NavBar />
       <main>
         <Container>
-          <Spacing.GapY size="section" class="mt-28">
+          <Flex direction="column" gap="2xl" class="mt-28">
             <StoresHeader />
             <StoresSearch
               inputSearchQuery={inputSearchQuery}
@@ -151,11 +154,7 @@ export default function Stores() {
             <Show
               when={filteredStores().length > 0}
               fallback={
-                <Typography.P>
-                  No stores found with{" "}
-                  {searchQuery() && `query '${searchQuery()}' and`} type '
-                  {activeStoreType()}'.
-                </Typography.P>
+                <Typography.P>{translation().noStoresFound}</Typography.P>
               }
             >
               <Suspense fallback={<Loader />}>
@@ -166,13 +165,13 @@ export default function Stores() {
             </Show>
             <Show when={stores() && stores()!.length > 0 && !searchQuery()}>
               <Button class="w-full lg:w-fit" onClick={loadMoreStores}>
-                Load more
+                {translation().loadMoreBtn}
               </Button>
             </Show>
-          </Spacing.GapY>
+          </Flex>
         </Container>
       </main>
       <Footer class="mt-12" />
-    </>
+    </AuthCheck>
   );
 }

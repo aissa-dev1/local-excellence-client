@@ -1,12 +1,15 @@
 import { createResource, For, Show } from "solid-js";
 import { service } from "~/service";
 import { withTryCatch } from "~/utils/with-try-catch";
-import Spacing from "../ui/spacing";
 import Typography from "../ui/typography";
 import Button from "../ui/button";
 import { A } from "@solidjs/router";
 import HomeProductCard from "./product-card";
 import { feature } from "~/feature";
+import Flex from "../ui/flex";
+import Grid from "../ui/grid";
+import { useTranslation } from "~/hooks/use-translation";
+import { homeTranslation } from "~/translations/pages/home";
 
 export default function HomeProducts() {
   const [homeProducts] = createResource(async () => {
@@ -21,20 +24,19 @@ export default function HomeProducts() {
     );
     return error ? 0 : response;
   });
+  const translation = useTranslation(homeTranslation);
 
   return (
-    <Spacing.GapY size="content-lg">
-      <Spacing.GapY size="content-sm">
-        <Typography.H3>Products</Typography.H3>
-        <Spacing.GapY
-          size="content-sm"
+    <Flex direction="column" gap="lg">
+      <Flex direction="column" gap="sm">
+        <Typography.H3>{translation().products.title}</Typography.H3>
+        <Flex
+          direction="column"
+          gap="sm"
           class="md:flex-row md:items-center md:justify-between"
         >
-          <Typography.P>
-            These are the products from our valued clients who have subscribed
-            to our service.
-          </Typography.P>
-          <Spacing.GapX size="content-md">
+          <Typography.P>{translation().products.description}</Typography.P>
+          <Flex gap="md">
             <A
               href={
                 feature.auth.state().isAuthenticated
@@ -49,26 +51,30 @@ export default function HomeProducts() {
                 }
               }}
             >
-              <Button>Create yours</Button>
+              <Button>{translation().products.createYoursBtn}</Button>
             </A>{" "}
             <Show when={homeProducts() && homeProducts()!.length > 0}>
               <A href="/products">
-                <Button variant="outline">See more ({productsSize()})</Button>
+                <Button variant="outline">
+                  {translation().products.seeMoreBtn} ({productsSize()})
+                </Button>
               </A>
             </Show>
-          </Spacing.GapX>
-        </Spacing.GapY>
-      </Spacing.GapY>
+          </Flex>
+        </Flex>
+      </Flex>
       <Show
         when={homeProducts() && homeProducts()!.length > 0}
-        fallback={<Typography.P>No products to show.</Typography.P>}
+        fallback={
+          <Typography.P>{translation().products.noProductsToShow}</Typography.P>
+        }
       >
-        <div class="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
+        <Grid columns="one" gap="md" class="md:grid-cols-2 xl:grid-cols-3">
           <For each={homeProducts()}>
             {(card) => <HomeProductCard {...card} />}
           </For>
-        </div>
+        </Grid>
       </Show>
-    </Spacing.GapY>
+    </Flex>
   );
 }

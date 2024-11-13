@@ -1,20 +1,22 @@
 import { createResource, createSignal, Show } from "solid-js";
 import { DOMElement } from "solid-js/jsx-runtime";
 import DashboardAuthGuard from "~/components/dashboard/auth-guard";
-import DashboardHeader from "~/components/dashboard/header";
+import DashboardNavBar from "~/components/dashboard/nav-bar";
 import Container from "~/components/reusable/container";
 import Footer from "~/components/reusable/footer";
 import Title from "~/components/reusable/title";
 import Button from "~/components/ui/button";
+import Flex from "~/components/ui/flex";
 import Input from "~/components/ui/input";
 import Label from "~/components/ui/label";
 import Select from "~/components/ui/select";
-import Spacing from "~/components/ui/spacing";
 import TextArea from "~/components/ui/textarea";
 import Typography from "~/components/ui/typography";
 import { feature } from "~/feature";
+import { useTranslation } from "~/hooks/use-translation";
 import { service } from "~/service";
 import { CreateStoreData } from "~/services/store";
+import { createStoreTranslation } from "~/translations/pages/dashboard/create-store";
 import { withTryCatch } from "~/utils/with-try-catch";
 
 export default function CreateStore() {
@@ -28,6 +30,7 @@ export default function CreateStore() {
     const [response, error] = await withTryCatch(service.store.getStoreTypes);
     return error ? [] : response!;
   });
+  const translation = useTranslation(createStoreTranslation);
 
   function handleChange(
     e: Event & {
@@ -69,38 +72,38 @@ export default function CreateStore() {
   return (
     <DashboardAuthGuard>
       <Title.Self>Dashboard | Create Store</Title.Self>
-      <DashboardHeader />
+      <DashboardNavBar />
       <main>
         <Container>
-          <Spacing.GapY size="section" class="mt-28">
-            <Typography.H1>Create Store</Typography.H1>
+          <Flex direction="column" gap="2xl" class="mt-28">
+            <Typography.H1>{translation().title}</Typography.H1>
             <form onSubmit={handleSubmit} class="space-y-4">
-              <Spacing.GapY size="content-md">
+              <Flex direction="column" gap="md">
                 <Label for="name" class="w-fit">
-                  Name:
+                  {translation().nameLabel}
                 </Label>
                 <Input
                   id="name"
                   name="name"
-                  placeholder="Enter a name..."
+                  placeholder={translation().namePlaceholder}
                   value={store().name}
                   onChange={handleChange}
                 />
-              </Spacing.GapY>
-              <Spacing.GapY size="content-md">
+              </Flex>
+              <Flex direction="column" gap="md">
                 <Label for="description" class="w-fit">
-                  Description:
+                  {translation().descriptionLabel}
                 </Label>
                 <TextArea
                   id="description"
                   name="description"
-                  placeholder="Enter a description..."
+                  placeholder={translation().descriptionPlaceholder}
                   value={store().description}
                   onChange={handleChange}
                 />
-                <Spacing.GapY size="content-md">
+                <Flex direction="column" gap="md">
                   <Label for="type" class="w-fit">
-                    Store type:
+                    {translation().storeTypeSelectLabel}
                   </Label>
                   <Show when={storeTypes()}>
                     <Select
@@ -109,19 +112,21 @@ export default function CreateStore() {
                       value={store().type}
                       onChange={handleChange}
                     >
-                      <option value="">Select a store type</option>
+                      <option value="">
+                        {translation().storeTypeSelectPlaceholder}
+                      </option>
                       {storeTypes()!.map((type) => (
-                        <option value={type} class="capitalize">
+                        <option value={type} class="capitalize ">
                           {type}
                         </option>
                       ))}
                     </Select>
                   </Show>
-                </Spacing.GapY>
-              </Spacing.GapY>
-              <Button type="submit">Create Store</Button>
+                </Flex>
+              </Flex>
+              <Button type="submit">{translation().createStoreBtn}</Button>
             </form>
-          </Spacing.GapY>
+          </Flex>
         </Container>
       </main>
       <Footer class="mt-12" />

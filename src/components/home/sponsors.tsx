@@ -1,14 +1,15 @@
 import Button from "../ui/button";
-import Spacing from "../ui/spacing";
 import Typography from "../ui/typography";
 import { service } from "~/service";
 import { createResource, For, Show } from "solid-js";
-import Card from "../ui/card";
 import { A } from "@solidjs/router";
-import { encodeStoreName } from "~/utils/store-name";
 import Carousel from "../ui/carousel";
 import { withTryCatch } from "~/utils/with-try-catch";
 import { feature } from "~/feature";
+import Flex from "../ui/flex";
+import { useTranslation } from "~/hooks/use-translation";
+import { homeTranslation } from "~/translations/pages/home";
+import SponsorCard from "./sponsor-card";
 
 export default function HomeSponsors() {
   const [sponsorsWithStores] = createResource(async () => {
@@ -32,19 +33,18 @@ export default function HomeSponsors() {
     );
     return sponsorWithStoreList;
   });
+  const translation = useTranslation(homeTranslation);
 
   return (
-    <Spacing.GapY size="content-lg">
-      <Spacing.GapY size="content-sm">
-        <Typography.H3>Sponsors</Typography.H3>
-        <Spacing.GapY
-          size="content-sm"
+    <Flex direction="column" gap="lg">
+      <Flex direction="column" gap="sm">
+        <Typography.H3>{translation().sponsors.title}</Typography.H3>
+        <Flex
+          direction="column"
+          gap="sm"
           class="md:flex-row md:items-center md:justify-between"
         >
-          <Typography.P>
-            Partner with us to showcase your brand among our top sponsors. Your
-            business could be featured here next.
-          </Typography.P>
+          <Typography.P>{translation().sponsors.description}</Typography.P>
           <A
             href={
               feature.auth.state().isAuthenticated
@@ -59,49 +59,22 @@ export default function HomeSponsors() {
               }
             }}
           >
-            <Button class="w-full sm:w-fit">Make yours</Button>
+            <Button class="w-full sm:w-fit">
+              {translation().sponsors.makeYoursBtn}
+            </Button>
           </A>
-        </Spacing.GapY>
-      </Spacing.GapY>
+        </Flex>
+      </Flex>
       <Show
         when={sponsorsWithStores() && sponsorsWithStores()!.length > 0}
         fallback={<Typography.P>No sponsors to show.</Typography.P>}
       >
         <Carousel transitionEffect="fade">
           <For each={sponsorsWithStores()}>
-            {(sponsorWithStore) => (
-              <Card.Self
-                class="h-full min-h-[200px]"
-                style={{
-                  "background-color": sponsorWithStore.backgroundColor,
-                  color: sponsorWithStore.color,
-                }}
-              >
-                <Card.Padded>
-                  <Spacing.GapY size="content-md">
-                    <Typography.H3>
-                      {sponsorWithStore.store?.name}
-                    </Typography.H3>
-                    <Typography.P>{sponsorWithStore.description}</Typography.P>
-                    <A
-                      href={
-                        sponsorWithStore.store
-                          ? `/stores/${encodeStoreName(
-                              sponsorWithStore.store.name
-                            )}`
-                          : "/stores"
-                      }
-                      class="w-fit"
-                    >
-                      <Button>Explore</Button>
-                    </A>
-                  </Spacing.GapY>
-                </Card.Padded>
-              </Card.Self>
-            )}
+            {(sponsorWithStore) => <SponsorCard {...sponsorWithStore} />}
           </For>
         </Carousel>
       </Show>
-    </Spacing.GapY>
+    </Flex>
   );
 }

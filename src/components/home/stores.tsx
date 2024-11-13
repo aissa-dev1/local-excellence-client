@@ -1,12 +1,15 @@
 import { createResource, For, Show } from "solid-js";
 import Button from "../ui/button";
-import Spacing from "../ui/spacing";
 import Typography from "../ui/typography";
 import HomeStoreCard from "./store-card";
 import { A } from "@solidjs/router";
 import { service } from "~/service";
 import { withTryCatch } from "~/utils/with-try-catch";
 import { feature } from "~/feature";
+import Flex from "../ui/flex";
+import Grid from "../ui/grid";
+import { useTranslation } from "~/hooks/use-translation";
+import { homeTranslation } from "~/translations/pages/home";
 
 export default function HomeStores() {
   const [homeStores] = createResource(async () => {
@@ -17,20 +20,19 @@ export default function HomeStores() {
     const [response, error] = await withTryCatch(service.store.getStoresSize);
     return error ? 0 : response;
   });
+  const translation = useTranslation(homeTranslation);
 
   return (
-    <Spacing.GapY size="content-lg" id="home_stores">
-      <Spacing.GapY size="content-sm">
-        <Typography.H3>Stores</Typography.H3>
-        <Spacing.GapY
-          size="content-sm"
+    <Flex direction="column" gap="lg" id="home_stores">
+      <Flex direction="column" gap="sm">
+        <Typography.H3>{translation().stores.title}</Typography.H3>
+        <Flex
+          direction="column"
+          gap="sm"
           class="md:flex-row md:items-center md:justify-between"
         >
-          <Typography.P>
-            These are the stores of our valued clients who have subscribed to
-            our service.
-          </Typography.P>
-          <Spacing.GapX size="content-md">
+          <Typography.P>{translation().stores.description}</Typography.P>
+          <Flex gap="md">
             <A
               href={
                 feature.auth.state().isAuthenticated
@@ -45,24 +47,28 @@ export default function HomeStores() {
                 }
               }}
             >
-              <Button>Create yours</Button>
+              <Button>{translation().stores.createYoursBtn}</Button>
             </A>
             <Show when={homeStores() && homeStores()!.length > 0}>
               <A href="/stores">
-                <Button variant="outline">See more ({storesSize()})</Button>
+                <Button variant="outline">
+                  {translation().stores.seeMoreBtn} ({storesSize()})
+                </Button>
               </A>
             </Show>
-          </Spacing.GapX>
-        </Spacing.GapY>
-      </Spacing.GapY>
+          </Flex>
+        </Flex>
+      </Flex>
       <Show
         when={homeStores() && homeStores()!.length > 0}
-        fallback={<Typography.P>No stores to show.</Typography.P>}
+        fallback={
+          <Typography.P>{translation().stores.noStoresToShow}</Typography.P>
+        }
       >
-        <div class="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
+        <Grid columns="one" gap="md" class="md:grid-cols-2 xl:grid-cols-3">
           <For each={homeStores()}>{(card) => <HomeStoreCard {...card} />}</For>
-        </div>
+        </Grid>
       </Show>
-    </Spacing.GapY>
+    </Flex>
   );
 }

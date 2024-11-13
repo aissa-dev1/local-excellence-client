@@ -1,14 +1,13 @@
-import { A } from "@solidjs/router";
-import Spacing from "../ui/spacing";
 import Typography from "../ui/typography";
+import { useTranslation } from "~/hooks/use-translation";
+import { productsTranslation } from "~/translations/pages/products";
 
 export default function ProductsHeader() {
+  const translation = useTranslation(productsTranslation);
+
   return (
-    <Spacing.GapY size="content-sm">
-      <Typography.H1>Explore all our products!</Typography.H1>
-      <A href="/" class="w-fit">
-        Home
-      </A>
-    </Spacing.GapY>
+    <>
+      <Typography.H1>{translation().header.title}</Typography.H1>
+    </>
   );
 }

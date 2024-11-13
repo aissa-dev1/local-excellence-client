@@ -1,8 +1,8 @@
 import { Accessor, createResource, For, Setter } from "solid-js";
 import { service } from "~/service";
-import Spacing from "../ui/spacing";
 import Badge from "../ui/badge";
 import { withTryCatch } from "~/utils/with-try-catch";
+import Flex from "../ui/flex";
 
 interface SearchFiltersProps {
   activeStoreType: Accessor<string>;
@@ -16,7 +16,7 @@ export default function SearchFilters(props: SearchFiltersProps) {
   });
 
   return (
-    <Spacing.GapX size="content-md" class="items-center flex-wrap">
+    <Flex items="center" gap="md" wrap="wrap">
       <For each={storeTypes()}>
         {(storeType) => (
           <Badge
@@ -36,6 +36,6 @@ export default function SearchFilters(props: SearchFiltersProps) {
           </Badge>
         )}
       </For>
-    </Spacing.GapX>
+    </Flex>
   );
 }

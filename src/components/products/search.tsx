@@ -1,9 +1,11 @@
 import { Accessor, Setter } from "solid-js";
 import Button from "../ui/button";
 import Input from "../ui/input";
-import Spacing from "../ui/spacing";
 import { GAP_SIZE } from "~/constants";
 import Label from "../ui/label";
+import Flex from "../ui/flex";
+import { useTranslation } from "~/hooks/use-translation";
+import { productsTranslation } from "~/translations/pages/products";
 
 interface ProductsSearchProps {
   inputSearchQuery: Accessor<string>;
@@ -18,13 +20,15 @@ interface ProductsSearchProps {
 }
 
 export default function ProductsSearch(props: ProductsSearchProps) {
+  const translation = useTranslation(productsTranslation);
+
   return (
-    <Spacing.GapY size="content-md">
+    <Flex direction="column" gap="md">
       <Label for="search" class="w-fit">
-        Search for products
+        {translation().search.label}
       </Label>
       <form
-        class={`flex flex-col ${GAP_SIZE.contentMd} lg:flex-row`}
+        class={`flex flex-col ${GAP_SIZE.md} lg:flex-row`}
         onSubmit={(e) => {
           e.preventDefault();
           props.searchProducts(props.inputSearchQuery());
@@ -32,7 +36,7 @@ export default function ProductsSearch(props: ProductsSearchProps) {
       >
         <Input
           type="text"
-          placeholder="Search..."
+          placeholder={translation().search.placeholder}
           id="search"
           value={props.inputSearchQuery()}
           onInput={props.handleInputChange}
@@ -41,9 +45,9 @@ export default function ProductsSearch(props: ProductsSearchProps) {
           class="w-full lg:w-fit"
           onClick={() => props.searchProducts(props.inputSearchQuery())}
         >
-          Search
+          {translation().search.button}
         </Button>
       </form>
-    </Spacing.GapY>
+    </Flex>
   );
 }

@@ -52,16 +52,22 @@ function DropDownMenuSelf(props: DropDownMenuProps) {
   );
 }
 
-interface DropDownMenuItemProps extends ComponentProps<"div"> {}
+interface DropDownMenuItemProps extends ComponentProps<"div"> {
+  rounded?: boolean;
+}
 
 function DropDownMenuItem(props: DropDownMenuItemProps) {
-  const [local, rest] = splitProps(props, ["class", "children"]);
+  const [local, rest] = splitProps(props, ["class", "children", "rounded"]);
+  const rounded = typeof local.rounded !== "undefined" ? local.rounded : true;
 
   return (
     <div
       {...rest}
       class={cn(
-        "px-4 py-2 cursor-pointer transition-colors duration-200 text-gray-800 hover:text-white bg-card text-card-foreground hover:bg-dropdown-item-primary",
+        "px-4 py-2 cursor-pointer transition-colors duration-200 text-gray-800 hover:text-white bg-card text-card-foreground hover:bg-main hover:text-main-foreground",
+        {
+          "rounded-md": rounded,
+        },
         local.class
       )}
     >

@@ -38,11 +38,14 @@ module.exports = {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
+        main: {
+          DEFAULT: "hsl(var(--main))",
+          foreground: "hsl(var(--main-foreground))",
+        },
         sheet: {
           DEFAULT: "hsl(var(--sheet))",
           foreground: "hsl(var(--sheet-foreground))",
         },
-        "dropdown-item-primary": "hsl(var(--dropdown-item-primary))",
       },
       borderRadius: {
         lg: "var(--radius)",

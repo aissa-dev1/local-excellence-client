@@ -1,23 +1,28 @@
 import { A } from "@solidjs/router";
 import { createEffect, createSignal, For, Show, Suspense } from "solid-js";
 import DashboardAuthGuard from "~/components/dashboard/auth-guard";
-import DashboardHeader from "~/components/dashboard/header";
+import DashboardNavBar from "~/components/dashboard/nav-bar";
 import HomeProductCard from "~/components/home/product-card";
+import SponsorCard from "~/components/home/sponsor-card";
 import HomeStoreCard from "~/components/home/store-card";
 import Container from "~/components/reusable/container";
 import Footer from "~/components/reusable/footer";
 import Title from "~/components/reusable/title";
 import Button from "~/components/ui/button";
 import Card from "~/components/ui/card";
+import Flex from "~/components/ui/flex";
 import Loader from "~/components/ui/loader";
-import Spacing from "~/components/ui/spacing";
 import Typography from "~/components/ui/typography";
 import { feature } from "~/feature";
+import { useAdvancedTranslation } from "~/hooks/use-translation";
 import { service } from "~/service";
 import { ProductType } from "~/services/product";
 import { SponsorType } from "~/services/sponsor";
 import { StoreType } from "~/services/store";
-import { encodeStoreName } from "~/utils/store-name";
+import { dashboardTranslation } from "~/translations/pages/dashboard/dashboard";
+import { homeTranslation } from "~/translations/pages/home";
+import { storesTranslation } from "~/translations/pages/stores";
+import { linksTranslation } from "~/translations/reusable/links";
 import { withTryCatch } from "~/utils/with-try-catch";
 
 export default function Dashboard() {
@@ -26,6 +31,13 @@ export default function Dashboard() {
     (SponsorType & { store: StoreType })[]
   >([]);
   const [products, setProducts] = createSignal<ProductType[]>([]);
+  const translation = useAdvancedTranslation([
+    {
+      dashboard: dashboardTranslation,
+      links: linksTranslation,
+      home: homeTranslation,
+    },
+  ]);
 
   createEffect(async () => {
     const [storesResponse, storesError] = await withTryCatch(
@@ -62,16 +74,18 @@ export default function Dashboard() {
   return (
     <DashboardAuthGuard>
       <Title.Left>Dashboard</Title.Left>
-      <DashboardHeader />
+      <DashboardNavBar />
       <main>
         <Container>
-          <Spacing.GapY size="section" class="mt-28">
-            <Spacing.GapY size="content-md">
-              <Typography.H1>Hi {feature.user.state().userName}!</Typography.H1>
-              <A href="/">Home</A>
-            </Spacing.GapY>
-            <Spacing.GapY size="content-md">
-              <Typography.H1>Sponsors</Typography.H1>
+          <Flex direction="column" gap="2xl" class="mt-28">
+            <Typography.H1>
+              {translation("dashboard").greeting}{" "}
+              {feature.user.state().userName}!
+            </Typography.H1>
+            <Flex direction="column" gap="md">
+              <Typography.H1>
+                {translation("dashboard").sponsorsSectionTxt}
+              </Typography.H1>
               <Suspense fallback={<Loader />}>
                 <Show
                   when={sponsorsWithStores().length > 0}
@@ -79,68 +93,47 @@ export default function Dashboard() {
                 >
                   <For each={sponsorsWithStores()}>
                     {(sponsorWithStore) => (
-                      <Card.Self
-                        class="h-full min-h-[200px]"
-                        style={{
-                          "background-color": sponsorWithStore.backgroundColor,
-                          color: sponsorWithStore.color,
-                        }}
-                      >
-                        <Card.Padded>
-                          <Spacing.GapY size="content-md">
-                            <Typography.H3>
-                              {sponsorWithStore.store.name}
-                            </Typography.H3>
-                            <Typography.P>
-                              {sponsorWithStore.description}
-                            </Typography.P>
-                            <A
-                              href={
-                                sponsorWithStore.store
-                                  ? `/stores/${encodeStoreName(
-                                      sponsorWithStore.store.name
-                                    )}`
-                                  : "/stores"
-                              }
-                              class="w-fit"
-                            >
-                              <Button>Explore</Button>
-                            </A>
-                          </Spacing.GapY>
-                        </Card.Padded>
-                      </Card.Self>
+                      <SponsorCard {...sponsorWithStore} />
                     )}
                   </For>
                 </Show>
               </Suspense>
-            </Spacing.GapY>
-            <Spacing.GapY size="content-md">
-              <Typography.H1>Stores</Typography.H1>
+            </Flex>
+            <Flex direction="column" gap="md">
+              <Typography.H1>{translation("links").stores}</Typography.H1>
               <Suspense fallback={<Loader />}>
                 <Show
                   when={stores().length > 0}
-                  fallback={<Typography.P>No stores to show</Typography.P>}
+                  fallback={
+                    <Typography.P>
+                      {translation("home").stores.noStoresToShow}
+                    </Typography.P>
+                  }
                 >
                   <For each={stores()}>
                     {(store) => <HomeStoreCard {...store} />}
                   </For>
                 </Show>
               </Suspense>
-            </Spacing.GapY>
-            <Spacing.GapY size="content-md">
-              <Typography.H1>Products</Typography.H1>
+            </Flex>
+            <Flex direction="column" gap="md">
+              <Typography.H1>{translation("links").products}</Typography.H1>
               <Suspense fallback={<Loader />}>
                 <Show
                   when={products().length > 0}
-                  fallback={<Typography.P>No products to show</Typography.P>}
+                  fallback={
+                    <Typography.P>
+                      {translation("home").products.noProductsToShow}
+                    </Typography.P>
+                  }
                 >
                   <For each={products()}>
                     {(product) => <HomeProductCard {...product} />}
                   </For>
                 </Show>
               </Suspense>
-            </Spacing.GapY>
-          </Spacing.GapY>
+            </Flex>
+          </Flex>
         </Container>
       </main>
       <Footer class="mt-12" />

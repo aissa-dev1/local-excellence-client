@@ -5,7 +5,6 @@ import NavBar from "~/components/reusable/nav-bar";
 import Title from "~/components/reusable/title";
 import Button from "~/components/ui/button";
 import Input from "~/components/ui/input";
-import Spacing from "~/components/ui/spacing";
 import Typography from "~/components/ui/typography";
 import { JWTUserType } from "~/features/user";
 import { useSignUp } from "~/hooks/auth/use-sign-up";
@@ -17,10 +16,22 @@ import {
 } from "~/utils/access-token";
 import { withTryCatch } from "~/utils/with-try-catch";
 import { DOMElement } from "solid-js/jsx-runtime";
+import Flex from "~/components/ui/flex";
+import { useAdvancedTranslation } from "~/hooks/use-translation";
+import { authTranslation } from "~/translations/reusable/auth";
+import { linksTranslation } from "~/translations/reusable/links";
+import { signUpTranslation } from "~/translations/pages/sign-up";
 
 export default function SignUp() {
   const { signUpData, setSignUpData, signUp } = useSignUp();
   const navigate = useNavigate();
+  const translation = useAdvancedTranslation([
+    {
+      links: linksTranslation,
+      auth: authTranslation,
+      signUp: signUpTranslation,
+    },
+  ]);
 
   onMount(async () => {
     if (feature.auth.state().isAuthenticated) {
@@ -70,64 +81,58 @@ export default function SignUp() {
       <Title.Right>Sign Up</Title.Right>
       <NavBar />
       <div class="absolute -translate-x-1/2 -translate-y-1/2 left-1/2 top-1/2 w-[325px]">
-        <Spacing.GapY size="content-lg" class="items-center justify-center">
+        <Flex direction="column" items="center" justify="center" gap="lg">
           <img
             class="w-28"
             src="/local-excellence.png"
             alt="Local Excellence"
           />
-          <Typography.H3>Sign up</Typography.H3>
-        </Spacing.GapY>
+          <Typography.H3 class="capitalize">
+            {translation("links").signUp}
+          </Typography.H3>
+        </Flex>
         <form onSubmit={handleSubmit}>
-          <Spacing.GapY size="content-md" class="mt-12">
+          <Flex direction="column" gap="md" class="mt-12">
             <Input
               type="email"
               name="email"
-              placeholder="Email"
-              class="px-4 py-2.5"
+              placeholder={translation("auth").email}
               value={signUpData().email}
               onchange={handleChange}
             />
             <Input
               type="password"
               name="password"
-              placeholder="Password"
-              class="px-4 py-2.5"
+              placeholder={translation("auth").password}
               value={signUpData().password}
               onchange={handleChange}
             />
             <Input
               type="text"
               name="userName"
-              placeholder="Name"
-              class="px-4 py-2.5"
+              placeholder={translation("auth").userName}
               value={signUpData().userName}
               onchange={handleChange}
             />
-            <Button
-              class="py-2.5"
-              type="submit"
-              disabled={signUpData().loading}
-            >
-              Sign up
+            <Button type="submit" disabled={signUpData().loading}>
+              {translation("links").signUp}
             </Button>
-          </Spacing.GapY>
+          </Flex>
         </form>
-        <Spacing.GapY size="content-md" class="mt-4 text-center">
+        <Flex direction="column" gap="md" class="mt-4 text-center">
           <Typography.P>
-            By creating an account you agree to our{" "}
+            {translation("signUp").agreeText}{" "}
             <A href="/terms">
-              <strong>Terms of Service</strong>
+              <strong>{translation("links").termsOfService}.</strong>
             </A>
-            .
           </Typography.P>
           <Typography.P>
-            Already have an account?{" "}
+            {translation("signUp").haveAccountText}{" "}
             <A href="/login">
-              <strong>Login</strong>
+              <strong>{translation("links").login}</strong>
             </A>
           </Typography.P>
-        </Spacing.GapY>
+        </Flex>
       </div>
     </>
   );

@@ -1,32 +1,35 @@
 import { createEffect, createSignal } from "solid-js";
 import { DOMElement } from "solid-js/jsx-runtime";
 import DashboardAuthGuard from "~/components/dashboard/auth-guard";
-import DashboardHeader from "~/components/dashboard/header";
+import DashboardNavBar from "~/components/dashboard/nav-bar";
 import Container from "~/components/reusable/container";
 import Footer from "~/components/reusable/footer";
 import Title from "~/components/reusable/title";
 import Button from "~/components/ui/button";
+import Flex from "~/components/ui/flex";
 import Input from "~/components/ui/input";
 import Label from "~/components/ui/label";
 import Select from "~/components/ui/select";
-import Spacing from "~/components/ui/spacing";
 import TextArea from "~/components/ui/textarea";
 import Typography from "~/components/ui/typography";
 import { feature } from "~/feature";
+import { useTranslation } from "~/hooks/use-translation";
 import { service } from "~/service";
 import { CreateSponsorData } from "~/services/sponsor";
 import { StoreType } from "~/services/store";
+import { createSponsorTranslation } from "~/translations/pages/dashboard/create-sponsor";
 import { withTryCatch } from "~/utils/with-try-catch";
 
 export default function CreateSponsor() {
   const initialSponsor: CreateSponsorData = {
     storeId: "",
-    backgroundColor: "",
-    color: "",
+    backgroundColor: "#000000",
+    color: "#ffffff",
     description: "",
   };
   const [sponsor, setSponsor] = createSignal<CreateSponsorData>(initialSponsor);
   const [stores, setStores] = createSignal<StoreType[]>([]);
+  const translation = useTranslation(createSponsorTranslation);
 
   createEffect(async () => {
     const [storesResponse, storesError] = await withTryCatch(
@@ -59,6 +62,7 @@ export default function CreateSponsor() {
     );
 
     if (error) {
+      console.log(sponsor());
       feature.toast.addToast(
         "Cannot create sponsor",
         error.response.data.message,
@@ -76,15 +80,15 @@ export default function CreateSponsor() {
   return (
     <DashboardAuthGuard>
       <Title.Self>Dashboard | Create Sponsor</Title.Self>
-      <DashboardHeader />
+      <DashboardNavBar />
       <main>
         <Container>
-          <Spacing.GapY size="section" class="mt-28">
-            <Typography.H1>Create Sponsor</Typography.H1>
+          <Flex direction="column" gap="2xl" class="mt-28">
+            <Typography.H1>{translation().title}</Typography.H1>
             <form onSubmit={handleSubmit} class="space-y-4">
-              <Spacing.GapY size="content-md">
+              <Flex direction="column" gap="md">
                 <Label for="storeId" class="w-fit">
-                  Store:
+                  {translation().storeSelectLabel}
                 </Label>
                 <Select
                   id="storeId"
@@ -92,15 +96,17 @@ export default function CreateSponsor() {
                   value={sponsor().storeId}
                   onChange={handleChange}
                 >
-                  <option value="">Select a store</option>
+                  <option value="">
+                    {translation().storeSelectPlaceholder}
+                  </option>
                   {stores().map((store) => (
                     <option value={store._id}>{store.name}</option>
                   ))}
                 </Select>
-              </Spacing.GapY>
-              <Spacing.GapY size="content-md">
+              </Flex>
+              <Flex direction="column" gap="md">
                 <Label for="backgroundColor" class="w-fit">
-                  Background Color:
+                  {translation().bgColorLabel}
                 </Label>
                 <Input
                   type="color"
@@ -108,11 +114,12 @@ export default function CreateSponsor() {
                   name="backgroundColor"
                   value={sponsor().backgroundColor}
                   onChange={handleChange}
+                  onInput={(e) => console.log(e.target.value)}
                 />
-              </Spacing.GapY>
-              <Spacing.GapY size="content-md">
+              </Flex>
+              <Flex direction="column" gap="md">
                 <Label for="color" class="w-fit">
-                  Color:
+                  {translation().colorLabel}
                 </Label>
                 <Input
                   type="color"
@@ -121,22 +128,22 @@ export default function CreateSponsor() {
                   value={sponsor().color}
                   onChange={handleChange}
                 />
-              </Spacing.GapY>
-              <Spacing.GapY size="content-md">
+              </Flex>
+              <Flex direction="column" gap="md">
                 <Label for="description" class="w-fit">
-                  Description:
+                  {translation().descriptionLabel}
                 </Label>
                 <TextArea
                   id="description"
                   name="description"
-                  placeholder="Enter a description..."
+                  placeholder={translation().descriptionPlaceholder}
                   value={sponsor().description}
                   onChange={handleChange}
                 />
-              </Spacing.GapY>
-              <Button type="submit">Create Sponsor</Button>
+              </Flex>
+              <Button type="submit">{translation().createSponsorBtn}</Button>
             </form>
-          </Spacing.GapY>
+          </Flex>
         </Container>
       </main>
       <Footer class="mt-12" />

@@ -1,10 +1,10 @@
 import { createEffect, createSignal, For, onCleanup, onMount } from "solid-js";
 import Card from "../ui/card";
 import Button from "../ui/button";
-import Spacing from "../ui/spacing";
 import { cn } from "~/utils/cn";
 import { feature } from "~/feature";
 import { Toast } from "~/features/toast";
+import Flex from "../ui/flex";
 
 interface ToastCardProps extends Toast {
   removeToast: (id: string) => void;
@@ -47,7 +47,7 @@ function ToastCard({
       onMouseLeave={() => setLifePaused(false)}
     >
       <div class="w-full flex items-center justify-between">
-        <Spacing.GapY size="content-sm" class="w-full">
+        <Flex direction="column" gap="sm" class="w-full">
           <Card.Title
             class={cn({
               "text-red-500": variant === "error",
@@ -57,7 +57,7 @@ function ToastCard({
             {title}
           </Card.Title>
           <Card.Description>{description}</Card.Description>
-        </Spacing.GapY>
+        </Flex>
         <Button variant="outline" class="w-fit" onClick={() => removeToast(id)}>
           Close
         </Button>
@@ -68,8 +68,9 @@ function ToastCard({
 
 export function Toaster() {
   return (
-    <Spacing.GapY
-      size="content-sm"
+    <Flex
+      direction="column"
+      gap="sm"
       class="fixed top-4 right-0 w-[90%] h-fit z-20 left-1/2 transform -translate-x-1/2 lg:w-[350px] lg:bottom-4 lg:right-4 lg:top-auto lg:left-auto lg:transform-none"
     >
       <For each={feature.toast.state().toasts}>
@@ -80,6 +81,6 @@ export function Toaster() {
           />
         )}
       </For>
-    </Spacing.GapY>
+    </Flex>
   );
 }

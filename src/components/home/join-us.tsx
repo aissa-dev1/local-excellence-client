@@ -1,31 +1,36 @@
 import { A } from "@solidjs/router";
 import Button from "../ui/button";
-import Spacing from "../ui/spacing";
 import Typography from "../ui/typography";
+import Flex from "../ui/flex";
+import { useAdvancedTranslation } from "~/hooks/use-translation";
+import { homeTranslation } from "~/translations/pages/home";
+import { linksTranslation } from "~/translations/reusable/links";
 
 export default function HomeJoinUs() {
+  const translation = useAdvancedTranslation([
+    {
+      home: homeTranslation,
+      links: linksTranslation,
+    },
+  ]);
+
   return (
-    <Spacing.GapY size="content-lg">
-      <Spacing.GapY size="content-sm">
-        <Typography.H3>Join Us Today</Typography.H3>
+    <Flex direction="column" gap="lg">
+      <Flex direction="column" gap="sm">
+        <Typography.H3>{translation("home").joinUs.title}</Typography.H3>
         <div>
-          <Typography.P>
-            <strong>Sign up</strong> now to unlock exclusive access to our
-            products and deals.
-          </Typography.P>
-          <Typography.P>
-            Already a member? <strong>Log in</strong> and start exploring!
-          </Typography.P>
+          <Typography.P>{translation("home").joinUs.description1}</Typography.P>
+          <Typography.P>{translation("home").joinUs.description2}</Typography.P>
         </div>
-      </Spacing.GapY>
-      <Spacing.GapX size="content-md">
+      </Flex>
+      <Flex gap="md">
         <A href="/sign-up">
-          <Button>Sign up</Button>
+          <Button>{translation("links").signUp}</Button>
         </A>
         <A href="/login">
-          <Button variant="outline">Login</Button>
+          <Button variant="outline">{translation("links").login}</Button>
         </A>
-      </Spacing.GapX>
-    </Spacing.GapY>
+      </Flex>
+    </Flex>
   );
 }

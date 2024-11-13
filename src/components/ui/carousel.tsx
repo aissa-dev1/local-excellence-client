@@ -1,10 +1,12 @@
-import { children, ParentProps, ResolvedJSXElement } from "solid-js";
-import { createSignal, onCleanup, onMount, JSX } from "solid-js";
+import { children, ParentProps, ResolvedJSXElement, Show } from "solid-js";
+import { createSignal, onCleanup, onMount } from "solid-js";
 import Button from "~/components/ui/button";
-import Spacing from "~/components/ui/spacing";
 import Typography from "~/components/ui/typography";
 import { cn } from "~/utils/cn";
 import { clientOnly } from "@solidjs/start";
+import Flex from "./flex";
+import Icon from "../reusable/icon";
+import { feature } from "~/feature";
 
 interface CarouselProps extends ParentProps {
   autoPlay?: boolean;
@@ -45,6 +47,7 @@ const Carousel = clientOnly(async () => {
       ) as unknown as () => ResolvedJSXElement[];
       const currentCard = () => resolvedChildren()[cardIndex()];
       const sliderCardPaused = () => paused() && pauseOnMouseEnter;
+      const pageDirection = () => feature.translation.state().direction;
 
       async function prevCard() {
         currentCardRef.classList.add(transitionEffectAnimation);
@@ -100,7 +103,7 @@ const Carousel = clientOnly(async () => {
       if (resolvedChildren().length <= 0) return null;
 
       return (
-        <Spacing.GapY size="content-sm">
+        <Flex direction="column" gap="sm">
           <div
             ref={currentCardRef}
             class={cn(
@@ -111,14 +114,33 @@ const Carousel = clientOnly(async () => {
           >
             {currentCard()}
           </div>
-          <div class="flex items-center justify-between">
-            <Button onClick={prevCard}>Prev</Button>
+          <Flex items="center" justify="between">
+            <Button onClick={prevCard} size="icon">
+              <Show
+                when={pageDirection() === "ltr"}
+                fallback={<Icon.ArrowRight />}
+              >
+                <Icon.ArrowLeft />
+              </Show>
+            </Button>
             <Typography.P>
-              {cardIndex() + 1}/{resolvedChildren().length}
+              <Show
+                when={pageDirection() === "ltr"}
+                fallback={`${resolvedChildren().length}/${cardIndex() + 1}`}
+              >
+                {cardIndex() + 1}/{resolvedChildren().length}
+              </Show>
             </Typography.P>
-            <Button onClick={nextCard}>Next</Button>
-          </div>
-        </Spacing.GapY>
+            <Button onClick={nextCard} size="icon">
+              <Show
+                when={pageDirection() === "ltr"}
+                fallback={<Icon.ArrowLeft />}
+              >
+                <Icon.ArrowRight />
+              </Show>{" "}
+            </Button>
+          </Flex>
+        </Flex>
       );
     },
   };

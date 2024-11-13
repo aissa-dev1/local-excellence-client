@@ -12,16 +12,18 @@ import {
 import HomeProductCard from "~/components/home/product-card";
 import ProductsHeader from "~/components/products/header";
 import ProductsSearch from "~/components/products/search";
+import AuthCheck from "~/components/reusable/auth-check";
 import Container from "~/components/reusable/container";
 import Footer from "~/components/reusable/footer";
 import NavBar from "~/components/reusable/nav-bar";
 import Title from "~/components/reusable/title";
 import Button from "~/components/ui/button";
+import Flex from "~/components/ui/flex";
 import Loader from "~/components/ui/loader";
-import Spacing from "~/components/ui/spacing";
 import Typography from "~/components/ui/typography";
+import { useTranslation } from "~/hooks/use-translation";
 import { service } from "~/service";
-import { ProductType } from "~/services/product";
+import { productsTranslation } from "~/translations/pages/products";
 import { scrollAllDown } from "~/utils/scroll-all-down";
 import { withTryCatch } from "~/utils/with-try-catch";
 
@@ -44,6 +46,7 @@ export default function Stores() {
   const [searchQuery, setSearchQuery] = createSignal("");
   const [searchInputInteraction, setSearchInputInteraction] =
     createSignal(false);
+  const translation = useTranslation(productsTranslation);
 
   async function loadProducts() {
     const [response, error] = await withTryCatch(
@@ -110,12 +113,12 @@ export default function Stores() {
   );
 
   return (
-    <>
+    <AuthCheck>
       <Title.Left>Products</Title.Left>
       <NavBar />
       <main>
         <Container>
-          <Spacing.GapY size="section" class="mt-28">
+          <Flex direction="column" gap="2xl" class="mt-28">
             <ProductsHeader />
             <ProductsSearch
               inputSearchQuery={inputSearchQuery}
@@ -126,9 +129,7 @@ export default function Stores() {
             <Show
               when={products() && products()!.length > 0}
               fallback={
-                <Typography.P>
-                  No products found with query '{searchQuery()}'
-                </Typography.P>
+                <Typography.P>{translation().noProductsFound}</Typography.P>
               }
             >
               <Suspense fallback={<Loader />}>
@@ -139,13 +140,13 @@ export default function Stores() {
             </Show>
             <Show when={products() && products()!.length > 0 && !searchQuery()}>
               <Button class="w-full lg:w-fit" onClick={loadMoreProducts}>
-                Load more
+                {translation().loadMoreBtn}
               </Button>
             </Show>
-          </Spacing.GapY>
+          </Flex>
         </Container>
       </main>
       <Footer class="mt-12" />
-    </>
+    </AuthCheck>
   );
 }

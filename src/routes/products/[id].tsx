@@ -1,12 +1,15 @@
 import { A, useNavigate, useParams } from "@solidjs/router";
 import { createSignal, onMount, Show } from "solid-js";
+import AuthCheck from "~/components/reusable/auth-check";
 import Container from "~/components/reusable/container";
 import Footer from "~/components/reusable/footer";
 import NavBar from "~/components/reusable/nav-bar";
 import Title from "~/components/reusable/title";
-import Spacing from "~/components/ui/spacing";
+import Flex from "~/components/ui/flex";
 import Typography from "~/components/ui/typography";
 import { CURRENCY } from "~/constants";
+import { feature } from "~/feature";
+import { useCurrency } from "~/hooks/use-currency";
 import { service } from "~/service";
 import { ProductType } from "~/services/product";
 import { StoreType } from "~/services/store";
@@ -21,7 +24,7 @@ export default function Product() {
     storeId: "",
     name: "",
     description: "",
-    price: 0,
+    price: "",
     createdAt: 0,
   });
   const [productStore, setProductStore] = createSignal<StoreType>({
@@ -32,6 +35,7 @@ export default function Product() {
     type: "",
     createdAt: 0,
   });
+  const currency = useCurrency();
 
   onMount(async () => {
     const [productResponse, productError] = await withTryCatch(
@@ -59,31 +63,24 @@ export default function Product() {
   });
 
   return (
-    <>
+    <AuthCheck>
       <Title.Self>{product().name} | Products</Title.Self>
       <NavBar />
       <main>
         <Container>
-          <Spacing.GapY size="section" class="mt-28">
+          <Flex direction="column" gap="2xl" class="mt-28">
             <Show when={product()}>
-              <Spacing.GapY size="content-sm">
+              <Flex direction="column" gap="sm">
                 <Typography.H1>{product().name}</Typography.H1>
                 <Typography.H3>
-                  {product().price} {CURRENCY.DZD}
+                  {product().price} {currency()}
                 </Typography.H3>
-              </Spacing.GapY>
+              </Flex>
             </Show>
-            <Spacing.GapX size="content-md">
-              <A href={`/stores/${encodeStoreName(productStore().name)}`}>
-                Store
-              </A>
-              <A href="/products">Products</A>
-              <A href="/">Home</A>
-            </Spacing.GapX>
-          </Spacing.GapY>
+          </Flex>
         </Container>
       </main>
       <Footer class="mt-12" />
-    </>
+    </AuthCheck>
   );
 }

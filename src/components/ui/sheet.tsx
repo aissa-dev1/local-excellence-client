@@ -9,6 +9,7 @@ import {
 import { cn } from "~/utils/cn";
 import Button from "./button";
 import Icon from "../reusable/icon";
+import { feature } from "~/feature";
 
 interface SheetProps extends ComponentProps<"div"> {
   name: string;
@@ -24,6 +25,7 @@ export default function Sheet(props: SheetProps) {
     "open",
     "setOpen",
   ]);
+  const pageDirection = () => feature.translation.state().direction;
 
   createEffect(() => {
     if (props.open()) {
@@ -34,16 +36,20 @@ export default function Sheet(props: SheetProps) {
   });
 
   onCleanup(() => {
+    if (typeof window === "undefined") return;
+
     document.body.classList.remove("overflow-hidden");
   });
 
   return (
     <div
       class={cn(
-        "bg-black/25 w-full h-full fixed top-0 left-0 z-20 transition-opacity duration-150 ease-in-out",
+        "bg-black/25 w-screen h-screen fixed top-0 z-20 transition-opacity duration-150 ease-in-out",
         {
           "pointer-events-none opacity-0": !local.open(),
           "pointer-events-auto opacity-100": local.open(),
+          "left-0": pageDirection() === "ltr",
+          "right-0": pageDirection() === "rtl",
         }
       )}
       onClick={() => {
@@ -52,10 +58,13 @@ export default function Sheet(props: SheetProps) {
     >
       <div
         class={cn(
-          "fixed top-0 left-0 flex flex-col h-screen w-3/4 bg-sheet text-sheet-foreground z-20 transform transition-transform duration-300 ease-in-out md:w-1/2 lg:w-64",
+          "fixed top-0 flex flex-col h-screen w-[75vw] bg-sheet text-sheet-foreground z-20 transform transition-transform duration-300 ease-in-out md:w-[50vw] lg:w-[350px]",
           {
-            "-translate-x-full": !local.open(),
+            "-translate-x-full": !local.open() && pageDirection() === "ltr",
+            "translate-x-full": !local.open() && pageDirection() === "rtl",
             "translate-x-0": local.open(),
+            "left-0": pageDirection() === "ltr",
+            "right-0": pageDirection() === "rtl",
           }
         )}
         onClick={(e) => e.stopPropagation()}

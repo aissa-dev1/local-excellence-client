@@ -1,22 +1,23 @@
 import { createEffect, createSignal } from "solid-js";
 import { DOMElement } from "solid-js/jsx-runtime";
 import DashboardAuthGuard from "~/components/dashboard/auth-guard";
-import DashboardHeader from "~/components/dashboard/header";
+import DashboardNavBar from "~/components/dashboard/nav-bar";
 import Container from "~/components/reusable/container";
 import Footer from "~/components/reusable/footer";
-import NavBar from "~/components/reusable/nav-bar";
 import Title from "~/components/reusable/title";
 import Button from "~/components/ui/button";
+import Flex from "~/components/ui/flex";
 import Input from "~/components/ui/input";
 import Label from "~/components/ui/label";
 import Select from "~/components/ui/select";
-import Spacing from "~/components/ui/spacing";
 import TextArea from "~/components/ui/textarea";
 import Typography from "~/components/ui/typography";
 import { feature } from "~/feature";
+import { useTranslation } from "~/hooks/use-translation";
 import { service } from "~/service";
 import { CreateProductData } from "~/services/product";
 import { StoreType } from "~/services/store";
+import { createProductTranslation } from "~/translations/pages/dashboard/create-product";
 import { withTryCatch } from "~/utils/with-try-catch";
 
 export default function CreateProduct() {
@@ -28,6 +29,7 @@ export default function CreateProduct() {
   };
   const [product, setProduct] = createSignal<CreateProductData>(initialProduct);
   const [stores, setStores] = createSignal<StoreType[]>([]);
+  const translation = useTranslation(createProductTranslation);
 
   createEffect(async () => {
     const [storesResponse, storesError] = await withTryCatch(
@@ -81,15 +83,15 @@ export default function CreateProduct() {
   return (
     <DashboardAuthGuard>
       <Title.Self>Dashboard | Create Product</Title.Self>
-      <DashboardHeader />
+      <DashboardNavBar />
       <main>
         <Container>
-          <Spacing.GapY size="section" class="mt-28">
-            <Typography.H1>Create Product</Typography.H1>
+          <Flex direction="column" gap="2xl" class="mt-28">
+            <Typography.H1>{translation().title}</Typography.H1>
             <form onSubmit={handleSubmit} class="space-y-4">
-              <Spacing.GapY size="content-md">
+              <Flex direction="column" gap="md">
                 <Label for="storeId" class="w-fit">
-                  Store:
+                  {translation().storeSelectLabel}
                 </Label>
                 <Select
                   id="storeId"
@@ -97,53 +99,55 @@ export default function CreateProduct() {
                   value={product().storeId}
                   onChange={handleChange}
                 >
-                  <option value="">Select a store</option>
+                  <option value="">
+                    {translation().storeSelectPlaceholder}
+                  </option>
                   {stores().map((store) => (
                     <option value={store._id}>{store.name}</option>
                   ))}
                 </Select>
-              </Spacing.GapY>
-              <Spacing.GapY size="content-md">
+              </Flex>
+              <Flex direction="column" gap="md">
                 <Label for="name" class="w-fit">
-                  Name:
+                  {translation().nameLabel}
                 </Label>
                 <Input
                   type="text"
                   id="name"
                   name="name"
-                  placeholder="Enter a name..."
+                  placeholder={translation().namePlaceholder}
                   value={product().name}
                   onChange={handleChange}
                 />
-              </Spacing.GapY>
-              <Spacing.GapY size="content-md">
+              </Flex>
+              <Flex direction="column" gap="md">
                 <Label for="description" class="w-fit">
-                  Description:
+                  {translation().descriptionLabel}
                 </Label>
                 <TextArea
                   id="description"
                   name="description"
-                  placeholder="Enter a description..."
+                  placeholder={translation().descriptionPlaceholder}
                   value={product().description}
                   onChange={handleChange}
                 />
-              </Spacing.GapY>
-              <Spacing.GapY size="content-md">
+              </Flex>
+              <Flex direction="column" gap="md">
                 <Label for="price" class="w-fit">
-                  Price:
+                  {translation().priceLabel}
                 </Label>
                 <Input
                   type="number"
                   id="price"
                   name="price"
-                  placeholder="Enter a price..."
+                  placeholder={translation().pricePlaceholder}
                   value={product().price}
                   onChange={handleChange}
                 />
-              </Spacing.GapY>
-              <Button type="submit">Create Product</Button>
+              </Flex>
+              <Button type="submit">{translation().createProductBtn}</Button>
             </form>
-          </Spacing.GapY>
+          </Flex>
         </Container>
       </main>
       <Footer class="mt-12" />
