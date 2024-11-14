@@ -1,4 +1,5 @@
 import axios from "axios";
+import { feature } from "~/feature";
 import { getAccessToken } from "~/utils/access-token";
 import { getApiUrl } from "~/utils/get-api-url";
 
@@ -49,12 +50,20 @@ export class StoreService {
   }
 
   async getStoreByName(name: string): Promise<StoreType> {
-    const response = await axios.get(`${getApiUrl("stores")}/name/${name}`);
+    const response = await axios.get(
+      `${getApiUrl("stores")}/name/${name}?language=${
+        feature.translation.state().language
+      }`
+    );
     return response.data;
   }
 
   async getStoreById(id: string): Promise<StoreType> {
-    const response = await axios.get(`${getApiUrl("stores")}/id/${id}`);
+    const response = await axios.get(
+      `${getApiUrl("stores")}/id/${id}?language=${
+        feature.translation.state().language
+      }`
+    );
     return response.data;
   }
 
@@ -71,11 +80,18 @@ export class StoreService {
   }
 
   async createStore(data: CreateStoreData): Promise<string> {
-    const response = await axios.post(getApiUrl("stores"), data, {
-      headers: {
-        Authorization: `Bearer ${getAccessToken()}`,
+    const response = await axios.post(
+      getApiUrl("stores"),
+      {
+        ...data,
+        language: feature.translation.state().language,
       },
-    });
+      {
+        headers: {
+          Authorization: `Bearer ${getAccessToken()}`,
+        },
+      }
+    );
     return response.data;
   }
 }

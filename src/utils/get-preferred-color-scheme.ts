@@ -1,6 +1,6 @@
-import { ColorScheme } from "~/components/context-providers/color-scheme-provider";
+import { AppearanceTheme } from "~/features/appearance";
 
-export function getPreferredColorScheme(): ColorScheme {
+export function getPreferredColorScheme(): AppearanceTheme {
   return window.matchMedia("(prefers-color-scheme: dark)").matches
     ? "dark"
     : "light";

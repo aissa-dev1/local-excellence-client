@@ -5,6 +5,8 @@ import { cn } from "~/utils/cn";
 import { feature } from "~/feature";
 import { Toast } from "~/features/toast";
 import Flex from "../ui/flex";
+import { useTranslation } from "~/hooks/use-translation";
+import { toastTranslation } from "~/translations/reusable/toast";
 
 interface ToastCardProps extends Toast {
   removeToast: (id: string) => void;
@@ -22,6 +24,7 @@ function ToastCard({
   let lifeInterval: NodeJS.Timeout;
   const [life, setLife] = createSignal(MAX_LIFE);
   const [lifePaused, setLifePaused] = createSignal(false);
+  const translation = useTranslation(toastTranslation);
 
   onMount(() => {
     lifeInterval = setInterval(() => {
@@ -59,7 +62,7 @@ function ToastCard({
           <Card.Description>{description}</Card.Description>
         </Flex>
         <Button variant="outline" class="w-fit" onClick={() => removeToast(id)}>
-          Close
+          {translation().closeBtn}
         </Button>
       </div>
     </div>

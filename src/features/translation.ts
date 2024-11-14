@@ -22,31 +22,20 @@ export class TranslationFeature extends BaseFeature<TranslationFeatureState> {
     const storedLanguage = localStorage.getItem(
       "translation_language"
     ) as TranslationLanguage;
+    const initialLanguage =
+      storedLanguage || getPreferredLanguage() || this.initialState.language;
+    const initialDirection = initialLanguage === "ar" ? "rtl" : "ltr";
 
-    if (storedLanguage) {
-      this.update({
-        language: storedLanguage,
-      });
-    } else {
-      const preferredLanguage =
-        getPreferredLanguage() || this.initialState.language;
-      this.update({
-        language: preferredLanguage,
-      });
-    }
+    this.update({
+      language: initialLanguage,
+      direction: initialDirection,
+    });
   }
 
   private handleLanguageChange(language: TranslationLanguage) {
     localStorage.setItem("translation_language", language);
-
-    if (language === "ar") {
-      document.body.classList.add("rtl");
-      document.documentElement.lang = "ar";
-      this.update({ direction: "rtl" });
-    } else {
-      document.body.classList.remove("rtl");
-      document.documentElement.lang = language;
-      this.update({ direction: "ltr" });
-    }
+    document.body.classList.toggle("rtl", language === "ar");
+    document.documentElement.dir = language === "ar" ? "rtl" : "ltr";
+    this.update({ direction: language === "ar" ? "rtl" : "ltr" });
   }
 }

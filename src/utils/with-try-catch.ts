@@ -1,4 +1,4 @@
-import { AsyncFunc } from "./types";
+import { AsyncFunc } from "~/types/async-func";
 
 export async function withTryCatch<T>(
   fn: AsyncFunc<T>,

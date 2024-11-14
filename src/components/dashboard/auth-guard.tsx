@@ -10,11 +10,15 @@ import {
   hasAccessToken,
 } from "~/utils/access-token";
 import { withTryCatch } from "~/utils/with-try-catch";
+import { useTranslation } from "~/hooks/use-translation";
+import { toastTranslation } from "~/translations/reusable/toast";
+import { service } from "~/service";
 
 interface DashboardAuthGuard extends ParentProps {}
 
 export default function DashboardAuthGuard(props: DashboardAuthGuard) {
   const navigate = useNavigate();
+  const translation = useTranslation(toastTranslation);
 
   onMount(async () => {
     feature.redirect.update({
@@ -35,9 +39,16 @@ export default function DashboardAuthGuard(props: DashboardAuthGuard) {
       return;
     }
     if (Date.now() / 1000 >= decodedUser!.exp!) {
-      feature.toast.addToast("Logged out", "Your session has expired", {
-        variant: "error",
+      await withTryCatch(async () => {
+        return service.auth.signOut();
       });
+      feature.toast.addToast(
+        translation().title.auth.signedOut,
+        translation().description.auth.sessionExpired,
+        {
+          variant: "error",
+        }
+      );
       clearAccessToken();
       navigate("/login");
       return;

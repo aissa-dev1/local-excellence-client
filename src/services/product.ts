@@ -1,4 +1,5 @@
 import axios from "axios";
+import { feature } from "~/feature";
 import { getAccessToken } from "~/utils/access-token";
 import { getApiUrl } from "~/utils/get-api-url";
 
@@ -59,16 +60,27 @@ export class ProductService {
   }
 
   async getProductById(id: string): Promise<ProductType> {
-    const response = await axios.get(`${getApiUrl("products")}/id/${id}`);
+    const response = await axios.get(
+      `${getApiUrl("products")}/id/${id}?language=${
+        feature.translation.state().language
+      }`
+    );
     return response.data;
   }
 
   async createProduct(data: CreateProductData): Promise<string> {
-    const response = await axios.post(getApiUrl("products"), data, {
-      headers: {
-        Authorization: `Bearer ${getAccessToken()}`,
+    const response = await axios.post(
+      getApiUrl("products"),
+      {
+        ...data,
+        language: feature.translation.state().language,
       },
-    });
+      {
+        headers: {
+          Authorization: `Bearer ${getAccessToken()}`,
+        },
+      }
+    );
     return response.data;
   }
 }

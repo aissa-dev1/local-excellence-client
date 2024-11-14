@@ -7,8 +7,12 @@ import { useNavigate, useSearchParams } from "@solidjs/router";
 import { setAccessToken } from "~/utils/access-token";
 import { feature } from "~/feature";
 import { withTryCatch } from "~/utils/with-try-catch";
+import { useTranslation } from "../use-translation";
+import { toastTranslation } from "~/translations/reusable/toast";
 
 export function useLogin() {
+  const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
   const [loginData, setLoginData] = createSignal<
     AuthLoginData & { loading: boolean }
   >({
@@ -16,8 +20,7 @@ export function useLogin() {
     password: "",
     loading: false,
   });
-  const navigate = useNavigate();
-  const [searchParams, setSearchParams] = useSearchParams();
+  const translation = useTranslation(toastTranslation);
 
   onMount(() => {
     if (feature.redirect.state().redirectTo) {
@@ -45,16 +48,24 @@ export function useLogin() {
     });
 
     if (error) {
-      feature.toast.addToast("Login failed", error.response.data.message, {
-        variant: "error",
-      });
+      feature.toast.addToast(
+        translation().title.auth.loginFailed,
+        error.response.data.message,
+        {
+          variant: "error",
+        }
+      );
       setLoginData((prev) => ({ ...prev, loading: false }));
       return;
     }
 
-    feature.toast.addToast("Login successful", response!.message, {
-      variant: "success",
-    });
+    feature.toast.addToast(
+      translation().title.auth.loginSuccessful,
+      response!.message,
+      {
+        variant: "success",
+      }
+    );
     const decodedUser = jwtDecode<JWTUserType>(response!.accessToken);
     feature.user.update({
       id: decodedUser.sub,

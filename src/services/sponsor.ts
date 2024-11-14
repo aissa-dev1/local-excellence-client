@@ -1,4 +1,5 @@
 import axios from "axios";
+import { feature } from "~/feature";
 import { getAccessToken } from "~/utils/access-token";
 import { getApiUrl } from "~/utils/get-api-url";
 
@@ -29,11 +30,18 @@ export class SponsorService {
   }
 
   async createSponsor(data: CreateSponsorData): Promise<string> {
-    const response = await axios.post(getApiUrl("sponsors"), data, {
-      headers: {
-        Authorization: `Bearer ${getAccessToken()}`,
+    const response = await axios.post(
+      getApiUrl("sponsors"),
+      {
+        ...data,
+        language: feature.translation.state().language,
       },
-    });
+      {
+        headers: {
+          Authorization: `Bearer ${getAccessToken()}`,
+        },
+      }
+    );
     return response.data;
   }
 }

@@ -13,10 +13,14 @@ import Select from "~/components/ui/select";
 import TextArea from "~/components/ui/textarea";
 import Typography from "~/components/ui/typography";
 import { feature } from "~/feature";
-import { useTranslation } from "~/hooks/use-translation";
+import {
+  useAdvancedTranslation,
+  useTranslation,
+} from "~/hooks/use-translation";
 import { service } from "~/service";
 import { CreateStoreData } from "~/services/store";
 import { createStoreTranslation } from "~/translations/pages/dashboard/create-store";
+import { toastTranslation } from "~/translations/reusable/toast";
 import { withTryCatch } from "~/utils/with-try-catch";
 
 export default function CreateStore() {
@@ -30,7 +34,12 @@ export default function CreateStore() {
     const [response, error] = await withTryCatch(service.store.getStoreTypes);
     return error ? [] : response!;
   });
-  const translation = useTranslation(createStoreTranslation);
+  const translation = useAdvancedTranslation([
+    {
+      createStore: createStoreTranslation,
+      toast: toastTranslation,
+    },
+  ]);
 
   function handleChange(
     e: Event & {
@@ -56,7 +65,7 @@ export default function CreateStore() {
 
     if (error) {
       feature.toast.addToast(
-        "Cannot create store",
+        translation("toast").title.store.cannotCreate,
         error.response.data.message,
         { variant: "error" }
       );
@@ -64,9 +73,13 @@ export default function CreateStore() {
     }
 
     setStore(initialStore);
-    feature.toast.addToast("Store created", response!, {
-      variant: "success",
-    });
+    feature.toast.addToast(
+      translation("toast").title.store.created,
+      response!,
+      {
+        variant: "success",
+      }
+    );
   }
 
   return (
@@ -76,34 +89,36 @@ export default function CreateStore() {
       <main>
         <Container>
           <Flex direction="column" gap="2xl" class="mt-28">
-            <Typography.H1>{translation().title}</Typography.H1>
+            <Typography.H1>{translation("createStore").title}</Typography.H1>
             <form onSubmit={handleSubmit} class="space-y-4">
               <Flex direction="column" gap="md">
                 <Label for="name" class="w-fit">
-                  {translation().nameLabel}
+                  {translation("createStore").nameLabel}
                 </Label>
                 <Input
                   id="name"
                   name="name"
-                  placeholder={translation().namePlaceholder}
+                  placeholder={translation("createStore").namePlaceholder}
                   value={store().name}
                   onChange={handleChange}
                 />
               </Flex>
               <Flex direction="column" gap="md">
                 <Label for="description" class="w-fit">
-                  {translation().descriptionLabel}
+                  {translation("createStore").descriptionLabel}
                 </Label>
                 <TextArea
                   id="description"
                   name="description"
-                  placeholder={translation().descriptionPlaceholder}
+                  placeholder={
+                    translation("createStore").descriptionPlaceholder
+                  }
                   value={store().description}
                   onChange={handleChange}
                 />
                 <Flex direction="column" gap="md">
                   <Label for="type" class="w-fit">
-                    {translation().storeTypeSelectLabel}
+                    {translation("createStore").storeTypeSelectLabel}
                   </Label>
                   <Show when={storeTypes()}>
                     <Select
@@ -113,7 +128,7 @@ export default function CreateStore() {
                       onChange={handleChange}
                     >
                       <option value="">
-                        {translation().storeTypeSelectPlaceholder}
+                        {translation("createStore").storeTypeSelectPlaceholder}
                       </option>
                       {storeTypes()!.map((type) => (
                         <option value={type} class="capitalize ">
@@ -124,7 +139,9 @@ export default function CreateStore() {
                   </Show>
                 </Flex>
               </Flex>
-              <Button type="submit">{translation().createStoreBtn}</Button>
+              <Button type="submit">
+                {translation("createStore").createStoreBtn}
+              </Button>
             </form>
           </Flex>
         </Container>

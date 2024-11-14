@@ -10,6 +10,11 @@ export interface Toast {
   durationSeconds: number;
 }
 
+interface AddToastOptions {
+  variant?: ToastVariant;
+  durationSeconds?: number;
+}
+
 interface ToastFeatureState {
   toasts: Toast[];
 }
@@ -19,11 +24,7 @@ export class ToastFeature extends BaseFeature<ToastFeatureState> {
     super({ toasts: [] });
   }
 
-  addToast(
-    title: string,
-    description: string,
-    options?: Partial<Omit<Toast, "id">>
-  ) {
+  addToast(title: string, description: string, options?: AddToastOptions) {
     const id = crypto.randomUUID();
     const newToast: Toast = {
       id,

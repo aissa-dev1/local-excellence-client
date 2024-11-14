@@ -13,11 +13,15 @@ import Select from "~/components/ui/select";
 import TextArea from "~/components/ui/textarea";
 import Typography from "~/components/ui/typography";
 import { feature } from "~/feature";
-import { useTranslation } from "~/hooks/use-translation";
+import {
+  useAdvancedTranslation,
+  useTranslation,
+} from "~/hooks/use-translation";
 import { service } from "~/service";
 import { CreateProductData } from "~/services/product";
 import { StoreType } from "~/services/store";
 import { createProductTranslation } from "~/translations/pages/dashboard/create-product";
+import { toastTranslation } from "~/translations/reusable/toast";
 import { withTryCatch } from "~/utils/with-try-catch";
 
 export default function CreateProduct() {
@@ -29,7 +33,12 @@ export default function CreateProduct() {
   };
   const [product, setProduct] = createSignal<CreateProductData>(initialProduct);
   const [stores, setStores] = createSignal<StoreType[]>([]);
-  const translation = useTranslation(createProductTranslation);
+  const translation = useAdvancedTranslation([
+    {
+      createProduct: createProductTranslation,
+      toast: toastTranslation,
+    },
+  ]);
 
   createEffect(async () => {
     const [storesResponse, storesError] = await withTryCatch(
@@ -67,7 +76,7 @@ export default function CreateProduct() {
 
     if (error) {
       feature.toast.addToast(
-        "Cannot create product",
+        translation("toast").title.product.cannotCreate,
         error.response.data.message,
         { variant: "error" }
       );
@@ -75,9 +84,13 @@ export default function CreateProduct() {
     }
 
     setProduct(initialProduct);
-    feature.toast.addToast("Product created", response!, {
-      variant: "success",
-    });
+    feature.toast.addToast(
+      translation("toast").title.product.created,
+      response!,
+      {
+        variant: "success",
+      }
+    );
   }
 
   return (
@@ -87,11 +100,11 @@ export default function CreateProduct() {
       <main>
         <Container>
           <Flex direction="column" gap="2xl" class="mt-28">
-            <Typography.H1>{translation().title}</Typography.H1>
+            <Typography.H1>{translation("createProduct").title}</Typography.H1>
             <form onSubmit={handleSubmit} class="space-y-4">
               <Flex direction="column" gap="md">
                 <Label for="storeId" class="w-fit">
-                  {translation().storeSelectLabel}
+                  {translation("createProduct").storeSelectLabel}
                 </Label>
                 <Select
                   id="storeId"
@@ -100,7 +113,7 @@ export default function CreateProduct() {
                   onChange={handleChange}
                 >
                   <option value="">
-                    {translation().storeSelectPlaceholder}
+                    {translation("createProduct").storeSelectPlaceholder}
                   </option>
                   {stores().map((store) => (
                     <option value={store._id}>{store.name}</option>
@@ -109,43 +122,47 @@ export default function CreateProduct() {
               </Flex>
               <Flex direction="column" gap="md">
                 <Label for="name" class="w-fit">
-                  {translation().nameLabel}
+                  {translation("createProduct").nameLabel}
                 </Label>
                 <Input
                   type="text"
                   id="name"
                   name="name"
-                  placeholder={translation().namePlaceholder}
+                  placeholder={translation("createProduct").namePlaceholder}
                   value={product().name}
                   onChange={handleChange}
                 />
               </Flex>
               <Flex direction="column" gap="md">
                 <Label for="description" class="w-fit">
-                  {translation().descriptionLabel}
+                  {translation("createProduct").descriptionLabel}
                 </Label>
                 <TextArea
                   id="description"
                   name="description"
-                  placeholder={translation().descriptionPlaceholder}
+                  placeholder={
+                    translation("createProduct").descriptionPlaceholder
+                  }
                   value={product().description}
                   onChange={handleChange}
                 />
               </Flex>
               <Flex direction="column" gap="md">
                 <Label for="price" class="w-fit">
-                  {translation().priceLabel}
+                  {translation("createProduct").priceLabel}
                 </Label>
                 <Input
                   type="number"
                   id="price"
                   name="price"
-                  placeholder={translation().pricePlaceholder}
+                  placeholder={translation("createProduct").pricePlaceholder}
                   value={product().price}
                   onChange={handleChange}
                 />
               </Flex>
-              <Button type="submit">{translation().createProductBtn}</Button>
+              <Button type="submit">
+                {translation("createProduct").createProductBtn}
+              </Button>
             </form>
           </Flex>
         </Container>

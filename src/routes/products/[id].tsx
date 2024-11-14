@@ -10,9 +10,14 @@ import Typography from "~/components/ui/typography";
 import { CURRENCY } from "~/constants";
 import { feature } from "~/feature";
 import { useCurrency } from "~/hooks/use-currency";
+import {
+  useAdvancedTranslation,
+  useTranslation,
+} from "~/hooks/use-translation";
 import { service } from "~/service";
 import { ProductType } from "~/services/product";
 import { StoreType } from "~/services/store";
+import { toastTranslation } from "~/translations/reusable/toast";
 import { encodeStoreName } from "~/utils/store-name";
 import { withTryCatch } from "~/utils/with-try-catch";
 
@@ -36,6 +41,7 @@ export default function Product() {
     createdAt: 0,
   });
   const currency = useCurrency();
+  const translation = useAdvancedTranslation([{ toast: toastTranslation }]);
 
   onMount(async () => {
     const [productResponse, productError] = await withTryCatch(
@@ -44,6 +50,13 @@ export default function Product() {
     );
 
     if (productError) {
+      feature.toast.addToast(
+        translation("toast").title.oops,
+        productError.response.data.message,
+        {
+          variant: "error",
+        }
+      );
       navigate("/products");
       return;
     }
@@ -55,6 +68,13 @@ export default function Product() {
     );
 
     if (productStoreError) {
+      feature.toast.addToast(
+        translation("toast").title.oops,
+        productStoreError.response.data.message,
+        {
+          variant: "error",
+        }
+      );
       navigate("/stores");
       return;
     }
