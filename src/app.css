@@ -31,7 +31,7 @@
     --sheet: 218, 13%, 12%;
     --sheet-foreground: 0 0% 98%;
   }
-  /* .dark {
+  .dark {
     --background: 218, 13%, 12%;
     --foreground: 0 0% 98%;
     --card: 218, 11%, 15%;
@@ -52,7 +52,7 @@
     --input: 240 3.7% 15.9%;
     --ring: 240 4.9% 83.9%;
     --radius: 0.5rem;
-  } */
+  }
 }
 
 body {
@@ -63,8 +63,6 @@ body {
 
 body.rtl {
   direction: rtl;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-    Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
 }
 
 ::selection {

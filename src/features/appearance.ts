@@ -19,27 +19,16 @@ export class AppearanceFeature extends BaseFeature<AppearanceFeatureState> {
     const storedTheme = localStorage.getItem(
       "appearance_theme"
     ) as AppearanceTheme;
+    const initialTheme =
+      storedTheme || getPreferredColorScheme() || this.initialState.theme;
 
-    if (storedTheme) {
-      this.update({
-        theme: storedTheme,
-      });
-    } else {
-      const preferredTheme =
-        getPreferredColorScheme() || this.initialState.theme;
-      this.update({
-        theme: preferredTheme,
-      });
-    }
+    this.update({
+      theme: initialTheme,
+    });
   }
 
   private handleThemeChange(theme: AppearanceTheme) {
     localStorage.setItem("appearance_theme", theme);
-
-    if (theme === "dark") {
-      document.body.classList.add("dark");
-    } else {
-      document.body.classList.remove("dark");
-    }
+    document.body.classList.toggle("dark", theme === "dark");
   }
 }

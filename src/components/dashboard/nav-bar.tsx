@@ -10,6 +10,8 @@ import LanguageSwitchSheet from "../reusable/language-switch-sheet";
 import { useAdvancedTranslation } from "~/hooks/use-translation";
 import { dashboardNavBarTranslation } from "~/translations/components/dashboard/nav-bar";
 import { linksTranslation } from "~/translations/reusable/links";
+import Flex from "../ui/flex";
+import AppearanceThemeButton from "../reusable/appearance-theme-button";
 
 interface DashboardNavBarProps
   extends Omit<ComponentProps<"div">, "children"> {}
@@ -76,7 +78,7 @@ export default function DashboardNavBar(props: DashboardNavBarProps) {
     <>
       <div
         class={cn(
-          "fixed top-0 left-0 w-full flex flex-col justify-center h-16 bg-background shadow-sm shadow-black/10 z-10",
+          "fixed top-0 left-0 w-full flex flex-col justify-center h-16 bg-background shadow-sm shadow-black/10 z-10 dark:shadow-white/10",
           local.class
         )}
         {...rest}
@@ -202,7 +204,10 @@ export default function DashboardNavBar(props: DashboardNavBarProps) {
             )}
           </For>
         </DropDownMenu.Self>
-        <LanguageSwitchSheet />
+        <Flex items="center" justify="between">
+          <AppearanceThemeButton />
+          <LanguageSwitchSheet />
+        </Flex>
       </Sheet>
     </>
   );

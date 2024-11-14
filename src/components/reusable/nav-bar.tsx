@@ -20,7 +20,7 @@ export default function NavBar(props: NavBarProps) {
   return (
     <div
       class={cn(
-        "fixed top-0 left-0 w-full flex flex-col justify-center h-16 bg-background shadow-sm shadow-black/10 z-10",
+        "fixed top-0 left-0 w-full flex flex-col justify-center h-16 bg-background shadow-sm shadow-black/10 z-10 dark:shadow-white/10",
         local.class
       )}
       {...rest}
@@ -67,6 +67,7 @@ export default function NavBar(props: NavBarProps) {
             </A>
           </Show>
           <LanguageSwitchSheet />
+          <AppearanceThemeButton />
         </Flex>
       </Container>
     </div>
