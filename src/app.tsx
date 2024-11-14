@@ -11,7 +11,7 @@ import { Toaster } from "./components/reusable/toaster";
 
 export default function App() {
   onMount(async () => {
-    feature.translation.initLanguage();
+    feature.init();
     await axios.get(getApiUrl("root"));
   });
 

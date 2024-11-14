@@ -12,6 +12,11 @@ class Feature {
   readonly auth = new AuthFeature();
   readonly redirect = new RedirectFeature();
   readonly translation = new TranslationFeature();
+
+  init() {
+    this.appearance.initTheme();
+    this.translation.initLanguage();
+  }
 }
 
 export const feature = new Feature();
