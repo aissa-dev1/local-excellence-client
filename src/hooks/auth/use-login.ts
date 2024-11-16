@@ -7,8 +7,7 @@ import { useNavigate, useSearchParams } from "@solidjs/router";
 import { setAccessToken } from "~/utils/access-token";
 import { feature } from "~/feature";
 import { withTryCatch } from "~/utils/with-try-catch";
-import { useTranslation } from "../use-translation";
-import { toastTranslation } from "~/translations/reusable/toast";
+import { useReusableTranslationTree } from "../use-translation-tree";
 
 export function useLogin() {
   const navigate = useNavigate();
@@ -20,7 +19,7 @@ export function useLogin() {
     password: "",
     loading: false,
   });
-  const translation = useTranslation(toastTranslation);
+  const reusabeleTranslation = useReusableTranslationTree();
 
   onMount(() => {
     if (feature.redirect.state().redirectTo) {
@@ -49,7 +48,7 @@ export function useLogin() {
 
     if (error) {
       feature.toast.addToast(
-        translation().title.auth.loginFailed,
+        reusabeleTranslation().toast.title.auth.loginFailed,
         error.response.data.message,
         {
           variant: "error",
@@ -60,7 +59,7 @@ export function useLogin() {
     }
 
     feature.toast.addToast(
-      translation().title.auth.loginSuccessful,
+      reusabeleTranslation().toast.title.auth.loginSuccessful,
       response!.message,
       {
         variant: "success",

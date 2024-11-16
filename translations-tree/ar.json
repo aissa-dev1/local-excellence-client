@@ -1,0 +1,189 @@
+{
+  "pages": {
+    "home": {
+      "header": {
+        "title": "اكتشف Local Excellence حيث كل شيء في متجر واحد",
+        "discoverBtn": "اكتشف"
+      },
+      "sponsors": {
+        "title": "الاعلانات",
+        "description": "قم بالاعلان واعرض متجرك هنا.",
+        "makeYoursBtn": "انشئ اعلان لمتجرك",
+        "card": {
+          "exploreBtn": "انطلق"
+        }
+      },
+      "stores": {
+        "title": "المتاجر",
+        "description": "هذه هي المتاجر للعملاء الذين قاموا بالاشتراك في خدمتنا.",
+        "createYoursBtn": "انشئ المتجر الخاص بك",
+        "seeMoreBtn": "المزيد",
+        "noStoresToShow": "لا يوجد متاجر لعرضها.",
+        "card": {
+          "goForItBtn": "استكشاف"
+        }
+      },
+      "products": {
+        "title": "المنتجات",
+        "description": "هذه هي المنتجات للعملاء الذين قاموا بالاشتراك في خدمتنا.",
+        "createYoursBtn": "انشئ المنتج الخاص بك",
+        "seeMoreBtn": "المزيد",
+        "noProductsToShow": "لا يوجد منتجات لعرضها.",
+        "card": {
+          "goForItBtn": "استكشاف"
+        }
+      },
+      "joinUs": {
+        "title": "انضم الينا",
+        "description1": "انشئ حسابك الان لاستكشاف المنتجات والعروض الخاصة بنا.",
+        "description2": "هل انت عضو؟ سجل الدخول وابدا بالاستكشاف!"
+      }
+    },
+    "products": {
+      "header": {
+        "title": "استكشف جميع منتجاتنا!"
+      },
+      "search": {
+        "label": "ابحث عن منتجات",
+        "placeholder": "ابحث...",
+        "button": "ابحث"
+      },
+      "noProductsFound": "لم يتم العثور على منتجات",
+      "loadMoreBtn": "تحميل المزيد"
+    },
+    "stores": {
+      "header": {
+        "title": "استكشف المتاجر القريبة منك!"
+      },
+      "search": {
+        "label": "ابحث عن المتاجر",
+        "placeholder": "ابحث...",
+        "button": "ابحث"
+      },
+      "noStoresFound": "لم يتم العثور على متاجر",
+      "loadMoreBtn": "تحميل المزيد"
+    },
+    "signUp": {
+      "agreeText": "بإنشائك لحساب، فإنك توافق على",
+      "haveAccountText": "هل لديك حساب؟"
+    },
+    "login": {
+      "noAccountText": "ليس لديك حساب؟"
+    },
+    "store": {
+      "hasNoProducts": "ليس لديه منتجات"
+    },
+    "dashboard": {
+      "greeting": "مرحبا",
+      "sponsorsSectionTxt": "الاعلانات",
+      "createSponsor": {
+        "title": "انشاء اعلان",
+        "storeSelectLabel": "المتجر",
+        "storeSelectPlaceholder": "اختر متجر",
+        "bgColorLabel": "لون الخلفية",
+        "colorLabel": "لون",
+        "descriptionLabel": "الوصف",
+        "descriptionPlaceholder": "أدخل وصف",
+        "createSponsorBtn": "انشاء اعلان"
+      },
+      "createStore": {
+        "title": "انشاء متجر",
+        "nameLabel": "الاسم",
+        "namePlaceholder": "أدخل اسم",
+        "descriptionLabel": "الوصف",
+        "descriptionPlaceholder": "أدخل وصف",
+        "storeTypeSelectLabel": "نوع المتجر",
+        "storeTypeSelectPlaceholder": "اختر نوع المتجر",
+        "createStoreBtn": "انشاء متجر"
+      },
+      "createProduct": {
+        "title": "انشاء منتج",
+        "storeSelectLabel": "المتجر",
+        "storeSelectPlaceholder": "اختر متجر",
+        "nameLabel": "الاسم",
+        "namePlaceholder": "أدخل اسم",
+        "descriptionLabel": "الوصف",
+        "descriptionPlaceholder": "أدخل وصف",
+        "priceLabel": "السعر",
+        "pricePlaceholder": "أدخل سعر",
+        "createProductBtn": "انشاء منتج"
+      }
+    }
+  },
+  "components": {
+    "dashboard": {
+      "navBar": {
+        "sheet": {
+          "name": "لوحة التحكم",
+          "mineTxt": "الخاص بي",
+          "actionsTxt": "الإجراءات",
+          "advancedActionsTxt": "إجراءات متقدمة"
+        }
+      }
+    },
+    "reusable": {
+      "footer": {
+        "copyright": "حقوق النشر ©",
+        "rightsReserved": "جميع الحقوق محفوظة لـ Local Excellence."
+      },
+      "languageSwitchSheet": {
+        "name": "اللغة"
+      }
+    }
+  },
+  "reusable": {
+    "auth": {
+      "email": "البريد الإلكتروني",
+      "password": "كلمة المرور",
+      "userName": "اسم المستخدم"
+    },
+    "links": {
+      "home": "الرئيسية",
+      "stores": "المتاجر",
+      "products": "المنتجات",
+      "dashboard": "لوحة التحكم",
+      "createSponsor": "انشاء اعلان",
+      "createStore": "انشاء متجر",
+      "createProduct": "انشاء منتج",
+      "signUp": "انشاء حساب",
+      "login": "تسجيل الدخول",
+      "signOut": "تسجيل الخروج",
+      "termsOfService": "شروط الخدمة"
+    },
+    "toast": {
+      "title": {
+        "success": "نجاح",
+        "error": "خطأ",
+        "info": "معلومة",
+        "done": "تم",
+        "oops": "عذرا",
+        "auth": {
+          "signedOut": "تم تسجيل الخروج",
+          "loginFailed": "فشل تسجيل الدخول",
+          "loginSuccessful": "تم تسجيل الدخول بنجاح",
+          "signUpFailed": "فشل انشاء الحساب",
+          "signUpSuccessful": "تم انشاء الحساب بنجاح"
+        },
+        "product": {
+          "cannotCreate": "لا يمكن إنشاء المنتج",
+          "created": "تم إنشاء المنتج"
+        },
+        "store": {
+          "cannotCreate": "لا يمكن إنشاء المتجر",
+          "created": "تم إنشاء المتجر"
+        },
+        "sponsor": {
+          "cannotCreate": "لا يمكن إنشاء الاعلان",
+          "created": "تم إنشاء الاعلان"
+        }
+      },
+      "description": {
+        "auth": {
+          "sessionExpired": "انتهت صلاحية الجلسة",
+          "signedOut": "تم تسجيل الخروج من الحساب"
+        }
+      },
+      "closeBtn": "اغلاق"
+    }
+  }
+}

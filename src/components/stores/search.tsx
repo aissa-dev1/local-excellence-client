@@ -5,8 +5,7 @@ import { GAP_SIZE } from "~/constants";
 import Label from "../ui/label";
 import SearchFilters from "./search-filters";
 import Flex from "../ui/flex";
-import { useTranslation } from "~/hooks/use-translation";
-import { storesTranslation } from "~/translations/pages/stores";
+import { usePagesTranslationTree } from "~/hooks/use-translation-tree";
 
 interface StoresSearchProps {
   inputSearchQuery: Accessor<string>;
@@ -23,12 +22,12 @@ interface StoresSearchProps {
 }
 
 export default function StoresSearch(props: StoresSearchProps) {
-  const translation = useTranslation(storesTranslation);
+  const pagesTranslation = usePagesTranslationTree();
 
   return (
     <Flex direction="column" gap="md">
       <Label for="search" class="w-fit">
-        {translation().search.label}
+        {pagesTranslation()?.stores.search.label}
       </Label>
       <form
         class={`flex flex-col ${GAP_SIZE.md} lg:flex-row`}
@@ -39,7 +38,7 @@ export default function StoresSearch(props: StoresSearchProps) {
       >
         <Input
           type="text"
-          placeholder={translation().search.placeholder}
+          placeholder={pagesTranslation()?.stores.search.placeholder}
           id="search"
           value={props.inputSearchQuery()}
           onInput={props.handleInputChange}
@@ -48,7 +47,7 @@ export default function StoresSearch(props: StoresSearchProps) {
           class="w-full lg:w-fit"
           onClick={() => props.searchStores(props.inputSearchQuery())}
         >
-          {translation().search.button}
+          {pagesTranslation()?.stores.search.button}
         </Button>
       </form>
       <SearchFilters

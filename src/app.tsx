@@ -6,8 +6,8 @@ import Title from "./components/reusable/title";
 import axios from "axios";
 import { getApiUrl } from "./utils/get-api-url";
 import { feature } from "./feature";
-import { MetaProvider } from "@solidjs/meta";
 import { Toaster } from "./components/reusable/toaster";
+import AppProviders from "./components/providers/app-providers";
 
 export default function App() {
   onMount(async () => {
@@ -18,11 +18,11 @@ export default function App() {
   return (
     <Router
       root={(props) => (
-        <MetaProvider>
+        <AppProviders>
           <Title.Self />
           <Suspense>{props.children}</Suspense>
           <Toaster />
-        </MetaProvider>
+        </AppProviders>
       )}
     >
       <FileRoutes />

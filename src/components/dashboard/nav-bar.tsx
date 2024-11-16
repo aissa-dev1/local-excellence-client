@@ -7,11 +7,12 @@ import Icon from "../reusable/icon";
 import Sheet from "../ui/sheet";
 import DropDownMenu from "../ui/drop-down-menu";
 import LanguageSwitchSheet from "../reusable/language-switch-sheet";
-import { useAdvancedTranslation } from "~/hooks/use-translation";
-import { dashboardNavBarTranslation } from "~/translations/components/dashboard/nav-bar";
-import { linksTranslation } from "~/translations/reusable/links";
 import Flex from "../ui/flex";
 import AppearanceThemeButton from "../reusable/appearance-theme-button";
+import {
+  useComponentsTranslationTree,
+  useReusableTranslationTree,
+} from "~/hooks/use-translation-tree";
 
 interface DashboardNavBarProps
   extends Omit<ComponentProps<"div">, "children"> {}
@@ -25,53 +26,55 @@ export default function DashboardNavBar(props: DashboardNavBarProps) {
   const [actionsDropDownOpen, setActionsDropDownOpen] = createSignal(false);
   const [advancedActionsDropDownOpen, setAdvancedActionsDropDownOpen] =
     createSignal(false);
-  const translation = useAdvancedTranslation([
-    {
-      navBar: dashboardNavBarTranslation,
-      links: linksTranslation,
-    },
-  ]);
+  const componentsTranslation = useComponentsTranslationTree();
+  const reusableTranslation = useReusableTranslationTree();
 
   const dashboardRoutes = () => [
-    { name: translation("navBar").sheet.name, path: "/dashboard" },
+    {
+      name: componentsTranslation()?.dashboard.navBar.sheet.name,
+      path: "/dashboard",
+    },
   ];
   const homeRoutes = () => [
     {
-      name: translation("links").home,
+      name: reusableTranslation()?.links.home,
       path: "/",
     },
     {
-      name: translation("links").stores,
+      name: reusableTranslation()?.links.stores,
       path: "/stores",
     },
     {
-      name: translation("links").products,
+      name: reusableTranslation()?.links.products,
       path: "/products",
     },
   ];
   const mineRoutes = () => [
     {
-      name: translation("links").stores,
+      name: reusableTranslation()?.links.stores,
       path: "/dashboard/stores",
     },
     {
-      name: translation("links").products,
+      name: reusableTranslation()?.links.products,
       path: "/dashboard/products",
     },
   ];
   const actionsRoutes = () => [
     {
-      name: translation("links").createSponsor,
+      name: reusableTranslation()?.links.createSponsor,
       path: "/dashboard/create-sponsor",
     },
-    { name: translation("links").createStore, path: "/dashboard/create-store" },
     {
-      name: translation("links").createProduct,
+      name: reusableTranslation()?.links.createStore,
+      path: "/dashboard/create-store",
+    },
+    {
+      name: reusableTranslation()?.links.createProduct,
       path: "/dashboard/create-product",
     },
   ];
   const advancedActionsRoutes = () => [
-    { name: translation("links").signOut, path: "/sign-out" },
+    { name: reusableTranslation()?.links.signOut, path: "/sign-out" },
   ];
 
   return (
@@ -102,7 +105,7 @@ export default function DashboardNavBar(props: DashboardNavBarProps) {
         </Container>
       </div>
       <Sheet
-        name={translation("navBar").sheet.name}
+        name={componentsTranslation()?.dashboard.navBar.sheet.name!}
         open={navBarOpen}
         setOpen={setNavBarOpen}
       >
@@ -121,7 +124,7 @@ export default function DashboardNavBar(props: DashboardNavBarProps) {
           )}
         </For>
         <DropDownMenu.Self
-          name={translation("links").home}
+          name={reusableTranslation()?.links.home!}
           open={homeDropDownOpen}
           setOpen={setHomeDropDownOpen}
         >
@@ -142,7 +145,7 @@ export default function DashboardNavBar(props: DashboardNavBarProps) {
           </For>
         </DropDownMenu.Self>
         <DropDownMenu.Self
-          name={translation("navBar").sheet.mineTxt}
+          name={componentsTranslation()?.dashboard.navBar.sheet.mineTxt!}
           open={mineDropDownOpen}
           setOpen={setMineDropDownOpen}
         >
@@ -163,7 +166,7 @@ export default function DashboardNavBar(props: DashboardNavBarProps) {
           </For>
         </DropDownMenu.Self>
         <DropDownMenu.Self
-          name={translation("navBar").sheet.actionsTxt}
+          name={componentsTranslation()?.dashboard.navBar.sheet.actionsTxt!}
           open={actionsDropDownOpen}
           setOpen={setActionsDropDownOpen}
         >
@@ -184,7 +187,9 @@ export default function DashboardNavBar(props: DashboardNavBarProps) {
           </For>
         </DropDownMenu.Self>
         <DropDownMenu.Self
-          name={translation("navBar").sheet.advancedActionsTxt}
+          name={
+            componentsTranslation()?.dashboard.navBar.sheet.advancedActionsTxt!
+          }
           open={advancedActionsDropDownOpen}
           setOpen={setAdvancedActionsDropDownOpen}
         >

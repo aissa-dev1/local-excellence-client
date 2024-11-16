@@ -21,9 +21,8 @@ import Button from "~/components/ui/button";
 import Flex from "~/components/ui/flex";
 import Loader from "~/components/ui/loader";
 import Typography from "~/components/ui/typography";
-import { useTranslation } from "~/hooks/use-translation";
+import { usePagesTranslationTree } from "~/hooks/use-translation-tree";
 import { service } from "~/service";
-import { productsTranslation } from "~/translations/pages/products";
 import { scrollAllDown } from "~/utils/scroll-all-down";
 import { withTryCatch } from "~/utils/with-try-catch";
 
@@ -46,7 +45,7 @@ export default function Stores() {
   const [searchQuery, setSearchQuery] = createSignal("");
   const [searchInputInteraction, setSearchInputInteraction] =
     createSignal(false);
-  const translation = useTranslation(productsTranslation);
+  const pagesTranslation = usePagesTranslationTree();
 
   async function loadProducts() {
     const [response, error] = await withTryCatch(
@@ -129,7 +128,9 @@ export default function Stores() {
             <Show
               when={products() && products()!.length > 0}
               fallback={
-                <Typography.P>{translation().noProductsFound}</Typography.P>
+                <Typography.P>
+                  {pagesTranslation()?.products.noProductsFound}
+                </Typography.P>
               }
             >
               <Suspense fallback={<Loader />}>
@@ -140,7 +141,7 @@ export default function Stores() {
             </Show>
             <Show when={products() && products()!.length > 0 && !searchQuery()}>
               <Button class="w-full lg:w-fit" onClick={loadMoreProducts}>
-                {translation().loadMoreBtn}
+                {pagesTranslation()?.products.loadMoreBtn}
               </Button>
             </Show>
           </Flex>

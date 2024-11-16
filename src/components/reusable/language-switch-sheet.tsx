@@ -5,8 +5,7 @@ import Sheet from "../ui/sheet";
 import { createSignal, For, JSX } from "solid-js";
 import { cn } from "~/utils/cn";
 import { TranslationLanguage } from "~/features/translation";
-import { useTranslation } from "~/hooks/use-translation";
-import { languageSwitchSheetTranslation } from "~/translations/components/reusable/language-switch-sheet";
+import { useComponentsTranslationTree } from "~/hooks/use-translation-tree";
 
 interface LanguageSwitchItem {
   code: TranslationLanguage;
@@ -15,13 +14,14 @@ interface LanguageSwitchItem {
 }
 
 export default function LanguageSwitchSheet() {
-  const [open, setOpen] = createSignal(false);
-  const language = () => feature.translation.state().language;
-  const translation = useTranslation(languageSwitchSheetTranslation);
   const languages: LanguageSwitchItem[] = [
     { code: "en", label: "English", icon: <Icon.Language /> },
     { code: "ar", label: "العربية", icon: <Icon.Language /> },
   ];
+
+  const [open, setOpen] = createSignal(false);
+  const language = () => feature.translation.state().language;
+  const componentsTranslation = useComponentsTranslationTree();
 
   return (
     <div>
@@ -32,7 +32,11 @@ export default function LanguageSwitchSheet() {
       >
         <Icon.Language />
       </Button>
-      <Sheet name={translation().name} open={open} setOpen={setOpen}>
+      <Sheet
+        name={componentsTranslation()?.reusable.languageSwitchSheet.name!}
+        open={open}
+        setOpen={setOpen}
+      >
         <For each={languages}>
           {(lang) => (
             <Button

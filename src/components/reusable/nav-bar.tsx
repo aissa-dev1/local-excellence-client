@@ -7,15 +7,14 @@ import { feature } from "~/feature";
 import AppearanceThemeButton from "./appearance-theme-button";
 import LanguageSwitchSheet from "./language-switch-sheet";
 import Flex from "../ui/flex";
-import { useTranslation } from "~/hooks/use-translation";
-import { linksTranslation } from "~/translations/reusable/links";
+import { useReusableTranslationTree } from "~/hooks/use-translation-tree";
 
 interface NavBarProps extends Omit<ComponentProps<"div">, "children"> {}
 
 export default function NavBar(props: NavBarProps) {
   const [local, rest] = splitProps(props, ["class"]);
   const location = useLocation();
-  const translation = useTranslation(linksTranslation);
+  const reusableTranslation = useReusableTranslationTree();
 
   return (
     <div
@@ -41,7 +40,7 @@ export default function NavBar(props: NavBarProps) {
             }
           >
             <A href="/dashboard">
-              <Button>{translation().dashboard}</Button>
+              <Button>{reusableTranslation()?.links.dashboard}</Button>
             </A>
           </Show>
           <Show
@@ -52,7 +51,7 @@ export default function NavBar(props: NavBarProps) {
             }
           >
             <A href="/sign-up">
-              <Button>{translation().signUp}</Button>
+              <Button>{reusableTranslation()?.links.signUp}</Button>
             </A>
           </Show>
           <Show
@@ -63,7 +62,7 @@ export default function NavBar(props: NavBarProps) {
             }
           >
             <A href="/">
-              <Button>{translation().home}</Button>
+              <Button>{reusableTranslation()?.links.home}</Button>
             </A>
           </Show>
           <LanguageSwitchSheet />

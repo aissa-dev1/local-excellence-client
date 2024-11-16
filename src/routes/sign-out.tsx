@@ -3,9 +3,8 @@ import { jwtDecode, JwtPayload } from "jwt-decode";
 import { onMount } from "solid-js";
 import { feature } from "~/feature";
 import { JWTUserType } from "~/features/user";
-import { useTranslation } from "~/hooks/use-translation";
+import { useReusableTranslationTree } from "~/hooks/use-translation-tree";
 import { service } from "~/service";
-import { toastTranslation } from "~/translations/reusable/toast";
 import {
   clearAccessToken,
   getAccessToken,
@@ -15,7 +14,7 @@ import { withTryCatch } from "~/utils/with-try-catch";
 
 export default function SignOut() {
   const navigate = useNavigate();
-  const translation = useTranslation(toastTranslation);
+  const reusableTranslation = useReusableTranslationTree();
 
   onMount(async () => {
     if (!hasAccessToken()) {
@@ -42,8 +41,10 @@ export default function SignOut() {
       isAuthenticated: false,
     });
     feature.toast.addToast(
-      translation().title.auth.signedOut,
-      signOutError ? translation().description.auth.signedOut : signOutResponse!
+      reusableTranslation()?.toast.title.auth.signedOut,
+      signOutError
+        ? reusableTranslation()?.toast.description.auth.signedOut
+        : signOutResponse!
     );
     navigate("/login");
   });

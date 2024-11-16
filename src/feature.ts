@@ -13,7 +13,7 @@ class Feature {
   readonly redirect = new RedirectFeature();
   readonly translation = new TranslationFeature();
 
-  init() {
+  async init() {
     this.appearance.initTheme();
     this.translation.initLanguage();
   }

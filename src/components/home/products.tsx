@@ -8,8 +8,7 @@ import HomeProductCard from "./product-card";
 import { feature } from "~/feature";
 import Flex from "../ui/flex";
 import Grid from "../ui/grid";
-import { useTranslation } from "~/hooks/use-translation";
-import { homeTranslation } from "~/translations/pages/home";
+import { usePagesTranslationTree } from "~/hooks/use-translation-tree";
 
 export default function HomeProducts() {
   const [homeProducts] = createResource(async () => {
@@ -24,18 +23,20 @@ export default function HomeProducts() {
     );
     return error ? 0 : response;
   });
-  const translation = useTranslation(homeTranslation);
+  const pagesTranslation = usePagesTranslationTree();
 
   return (
     <Flex direction="column" gap="lg">
       <Flex direction="column" gap="sm">
-        <Typography.H3>{translation().products.title}</Typography.H3>
+        <Typography.H3>{pagesTranslation()?.home.products.title}</Typography.H3>
         <Flex
           direction="column"
           gap="sm"
           class="md:flex-row md:items-center md:justify-between"
         >
-          <Typography.P>{translation().products.description}</Typography.P>
+          <Typography.P>
+            {pagesTranslation()?.home.products.description}
+          </Typography.P>
           <Flex gap="md">
             <A
               href={
@@ -51,12 +52,15 @@ export default function HomeProducts() {
                 }
               }}
             >
-              <Button>{translation().products.createYoursBtn}</Button>
+              <Button>
+                {pagesTranslation()?.home.products.createYoursBtn}
+              </Button>
             </A>{" "}
             <Show when={homeProducts() && homeProducts()!.length > 0}>
               <A href="/products">
                 <Button variant="outline">
-                  {translation().products.seeMoreBtn} ({productsSize()})
+                  {pagesTranslation()?.home.products.seeMoreBtn} (
+                  {productsSize()})
                 </Button>
               </A>
             </Show>
@@ -66,7 +70,9 @@ export default function HomeProducts() {
       <Show
         when={homeProducts() && homeProducts()!.length > 0}
         fallback={
-          <Typography.P>{translation().products.noProductsToShow}</Typography.P>
+          <Typography.P>
+            {pagesTranslation()?.home.products.noProductsToShow}
+          </Typography.P>
         }
       >
         <Grid columns="one" gap="md" class="md:grid-cols-2 xl:grid-cols-3">

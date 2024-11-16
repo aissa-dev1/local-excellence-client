@@ -10,15 +10,14 @@ import {
   hasAccessToken,
 } from "~/utils/access-token";
 import { withTryCatch } from "~/utils/with-try-catch";
-import { useTranslation } from "~/hooks/use-translation";
-import { toastTranslation } from "~/translations/reusable/toast";
 import { service } from "~/service";
+import { useReusableTranslationTree } from "~/hooks/use-translation-tree";
 
 interface DashboardAuthGuard extends ParentProps {}
 
 export default function DashboardAuthGuard(props: DashboardAuthGuard) {
   const navigate = useNavigate();
-  const translation = useTranslation(toastTranslation);
+  const reusableTranslation = useReusableTranslationTree();
 
   onMount(async () => {
     feature.redirect.update({
@@ -43,8 +42,8 @@ export default function DashboardAuthGuard(props: DashboardAuthGuard) {
         return service.auth.signOut();
       });
       feature.toast.addToast(
-        translation().title.auth.signedOut,
-        translation().description.auth.sessionExpired,
+        reusableTranslation()?.toast.title.auth.signedOut!,
+        reusableTranslation()?.toast.description.auth.sessionExpired!,
         {
           variant: "error",
         }

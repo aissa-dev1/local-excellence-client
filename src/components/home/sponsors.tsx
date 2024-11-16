@@ -7,9 +7,8 @@ import Carousel from "../ui/carousel";
 import { withTryCatch } from "~/utils/with-try-catch";
 import { feature } from "~/feature";
 import Flex from "../ui/flex";
-import { useTranslation } from "~/hooks/use-translation";
-import { homeTranslation } from "~/translations/pages/home";
 import SponsorCard from "./sponsor-card";
+import { usePagesTranslationTree } from "~/hooks/use-translation-tree";
 
 export default function HomeSponsors() {
   const [sponsorsWithStores] = createResource(async () => {
@@ -33,18 +32,20 @@ export default function HomeSponsors() {
     );
     return sponsorWithStoreList;
   });
-  const translation = useTranslation(homeTranslation);
+  const pagesTranslation = usePagesTranslationTree();
 
   return (
     <Flex direction="column" gap="lg">
       <Flex direction="column" gap="sm">
-        <Typography.H3>{translation().sponsors.title}</Typography.H3>
+        <Typography.H3>{pagesTranslation()?.home.sponsors.title}</Typography.H3>
         <Flex
           direction="column"
           gap="sm"
           class="md:flex-row md:items-center md:justify-between"
         >
-          <Typography.P>{translation().sponsors.description}</Typography.P>
+          <Typography.P>
+            {pagesTranslation()?.home.sponsors.description}
+          </Typography.P>
           <A
             href={
               feature.auth.state().isAuthenticated
@@ -60,7 +61,7 @@ export default function HomeSponsors() {
             }}
           >
             <Button class="w-full sm:w-fit">
-              {translation().sponsors.makeYoursBtn}
+              {pagesTranslation()?.home.sponsors.makeYoursBtn}
             </Button>
           </A>
         </Flex>

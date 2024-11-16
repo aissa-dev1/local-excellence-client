@@ -1,13 +1,12 @@
-import { useTranslation } from "~/hooks/use-translation";
+import { usePagesTranslationTree } from "~/hooks/use-translation-tree";
 import Typography from "../ui/typography";
-import { storesTranslation } from "~/translations/pages/stores";
 
 export default function StoresHeader() {
-  const translation = useTranslation(storesTranslation);
+  const pagesTranslation = usePagesTranslationTree();
 
   return (
     <>
-      <Typography.H1>{translation().header.title}</Typography.H1>
+      <Typography.H1>{pagesTranslation()?.stores.header.title}</Typography.H1>
     </>
   );
 }

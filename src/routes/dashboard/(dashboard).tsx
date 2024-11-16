@@ -1,4 +1,3 @@
-import { A } from "@solidjs/router";
 import { createEffect, createSignal, For, Show, Suspense } from "solid-js";
 import DashboardAuthGuard from "~/components/dashboard/auth-guard";
 import DashboardNavBar from "~/components/dashboard/nav-bar";
@@ -8,21 +7,18 @@ import HomeStoreCard from "~/components/home/store-card";
 import Container from "~/components/reusable/container";
 import Footer from "~/components/reusable/footer";
 import Title from "~/components/reusable/title";
-import Button from "~/components/ui/button";
-import Card from "~/components/ui/card";
 import Flex from "~/components/ui/flex";
 import Loader from "~/components/ui/loader";
 import Typography from "~/components/ui/typography";
 import { feature } from "~/feature";
-import { useAdvancedTranslation } from "~/hooks/use-translation";
+import {
+  usePagesTranslationTree,
+  useReusableTranslationTree,
+} from "~/hooks/use-translation-tree";
 import { service } from "~/service";
 import { ProductType } from "~/services/product";
 import { SponsorType } from "~/services/sponsor";
 import { StoreType } from "~/services/store";
-import { dashboardTranslation } from "~/translations/pages/dashboard/dashboard";
-import { homeTranslation } from "~/translations/pages/home";
-import { storesTranslation } from "~/translations/pages/stores";
-import { linksTranslation } from "~/translations/reusable/links";
 import { withTryCatch } from "~/utils/with-try-catch";
 
 export default function Dashboard() {
@@ -31,13 +27,8 @@ export default function Dashboard() {
     (SponsorType & { store: StoreType })[]
   >([]);
   const [products, setProducts] = createSignal<ProductType[]>([]);
-  const translation = useAdvancedTranslation([
-    {
-      dashboard: dashboardTranslation,
-      links: linksTranslation,
-      home: homeTranslation,
-    },
-  ]);
+  const pagesTranslation = usePagesTranslationTree();
+  const reusableTranslation = useReusableTranslationTree();
 
   createEffect(async () => {
     const [storesResponse, storesError] = await withTryCatch(
@@ -79,12 +70,12 @@ export default function Dashboard() {
         <Container>
           <Flex direction="column" gap="2xl" class="mt-28">
             <Typography.H1>
-              {translation("dashboard").greeting}{" "}
+              {pagesTranslation()?.dashboard.greeting}{" "}
               {feature.user.state().userName}!
             </Typography.H1>
             <Flex direction="column" gap="md">
               <Typography.H1>
-                {translation("dashboard").sponsorsSectionTxt}
+                {pagesTranslation()?.dashboard.sponsorsSectionTxt}
               </Typography.H1>
               <Suspense fallback={<Loader />}>
                 <Show
@@ -100,13 +91,15 @@ export default function Dashboard() {
               </Suspense>
             </Flex>
             <Flex direction="column" gap="md">
-              <Typography.H1>{translation("links").stores}</Typography.H1>
+              <Typography.H1>
+                {reusableTranslation()?.links.stores}
+              </Typography.H1>
               <Suspense fallback={<Loader />}>
                 <Show
                   when={stores().length > 0}
                   fallback={
                     <Typography.P>
-                      {translation("home").stores.noStoresToShow}
+                      {pagesTranslation()?.home.stores.noStoresToShow}
                     </Typography.P>
                   }
                 >
@@ -117,13 +110,15 @@ export default function Dashboard() {
               </Suspense>
             </Flex>
             <Flex direction="column" gap="md">
-              <Typography.H1>{translation("links").products}</Typography.H1>
+              <Typography.H1>
+                {reusableTranslation()?.links.products}
+              </Typography.H1>
               <Suspense fallback={<Loader />}>
                 <Show
                   when={products().length > 0}
                   fallback={
                     <Typography.P>
-                      {translation("home").products.noProductsToShow}
+                      {pagesTranslation()?.home.products.noProductsToShow}
                     </Typography.P>
                   }
                 >

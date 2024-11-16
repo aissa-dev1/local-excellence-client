@@ -1,5 +1,8 @@
 import { getPreferredLanguage } from "~/utils/get-preferred-language";
 import { BaseFeature } from "./base-feature";
+import { TranslationTree } from "~/lib/translation/types";
+import { readTranslationTree } from "~/lib/translation/read-translation-tree";
+import { feature } from "~/feature";
 
 export type TranslationLanguage = "en" | "ar";
 export type PageDirection = "ltr" | "rtl";
@@ -7,6 +10,7 @@ export type PageDirection = "ltr" | "rtl";
 interface TranslationFeatureState {
   language: TranslationLanguage;
   direction: PageDirection;
+  tree: TranslationTree;
 }
 
 export class TranslationFeature extends BaseFeature<TranslationFeatureState> {
@@ -14,6 +18,7 @@ export class TranslationFeature extends BaseFeature<TranslationFeatureState> {
     super({
       language: "en",
       direction: "ltr",
+      tree: {} as TranslationTree,
     });
     this.addObserver("language", this.handleLanguageChange.bind(this));
   }

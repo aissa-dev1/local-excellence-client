@@ -1,4 +1,4 @@
-import { A, useNavigate, useParams } from "@solidjs/router";
+import { useNavigate, useParams } from "@solidjs/router";
 import { createSignal, onMount, Show } from "solid-js";
 import AuthCheck from "~/components/reusable/auth-check";
 import Container from "~/components/reusable/container";
@@ -7,18 +7,12 @@ import NavBar from "~/components/reusable/nav-bar";
 import Title from "~/components/reusable/title";
 import Flex from "~/components/ui/flex";
 import Typography from "~/components/ui/typography";
-import { CURRENCY } from "~/constants";
 import { feature } from "~/feature";
 import { useCurrency } from "~/hooks/use-currency";
-import {
-  useAdvancedTranslation,
-  useTranslation,
-} from "~/hooks/use-translation";
+import { useReusableTranslationTree } from "~/hooks/use-translation-tree";
 import { service } from "~/service";
 import { ProductType } from "~/services/product";
 import { StoreType } from "~/services/store";
-import { toastTranslation } from "~/translations/reusable/toast";
-import { encodeStoreName } from "~/utils/store-name";
 import { withTryCatch } from "~/utils/with-try-catch";
 
 export default function Product() {
@@ -41,7 +35,7 @@ export default function Product() {
     createdAt: 0,
   });
   const currency = useCurrency();
-  const translation = useAdvancedTranslation([{ toast: toastTranslation }]);
+  const reusableTranslation = useReusableTranslationTree();
 
   onMount(async () => {
     const [productResponse, productError] = await withTryCatch(
@@ -51,7 +45,7 @@ export default function Product() {
 
     if (productError) {
       feature.toast.addToast(
-        translation("toast").title.oops,
+        reusableTranslation()?.toast.title.oops,
         productError.response.data.message,
         {
           variant: "error",
@@ -69,7 +63,7 @@ export default function Product() {
 
     if (productStoreError) {
       feature.toast.addToast(
-        translation("toast").title.oops,
+        reusableTranslation()?.toast.title.oops,
         productStoreError.response.data.message,
         {
           variant: "error",

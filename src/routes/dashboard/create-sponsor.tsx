@@ -14,14 +14,12 @@ import TextArea from "~/components/ui/textarea";
 import Typography from "~/components/ui/typography";
 import { feature } from "~/feature";
 import {
-  useAdvancedTranslation,
-  useTranslation,
-} from "~/hooks/use-translation";
+  usePagesTranslationTree,
+  useReusableTranslationTree,
+} from "~/hooks/use-translation-tree";
 import { service } from "~/service";
 import { CreateSponsorData } from "~/services/sponsor";
 import { StoreType } from "~/services/store";
-import { createSponsorTranslation } from "~/translations/pages/dashboard/create-sponsor";
-import { toastTranslation } from "~/translations/reusable/toast";
 import { withTryCatch } from "~/utils/with-try-catch";
 
 export default function CreateSponsor() {
@@ -33,12 +31,8 @@ export default function CreateSponsor() {
   };
   const [sponsor, setSponsor] = createSignal<CreateSponsorData>(initialSponsor);
   const [stores, setStores] = createSignal<StoreType[]>([]);
-  const translation = useAdvancedTranslation([
-    {
-      createSponsor: createSponsorTranslation,
-      toast: toastTranslation,
-    },
-  ]);
+  const pagesTranslation = usePagesTranslationTree();
+  const reusableTranslation = useReusableTranslationTree();
 
   createEffect(async () => {
     const [storesResponse, storesError] = await withTryCatch(
@@ -72,7 +66,7 @@ export default function CreateSponsor() {
 
     if (error) {
       feature.toast.addToast(
-        translation("toast").title.sponsor.cannotCreate,
+        reusableTranslation()?.toast.title.sponsor.cannotCreate,
         error.response.data.message,
         { variant: "error" }
       );
@@ -81,7 +75,7 @@ export default function CreateSponsor() {
 
     setSponsor(initialSponsor);
     feature.toast.addToast(
-      translation("toast").title.sponsor.created,
+      reusableTranslation()?.toast.title.sponsor.created,
       response!,
       {
         variant: "success",
@@ -96,11 +90,13 @@ export default function CreateSponsor() {
       <main>
         <Container>
           <Flex direction="column" gap="2xl" class="mt-28">
-            <Typography.H1>{translation("createSponsor").title}</Typography.H1>
+            <Typography.H1>
+              {pagesTranslation()?.dashboard.createSponsor.title}
+            </Typography.H1>
             <form onSubmit={handleSubmit} class="space-y-4">
               <Flex direction="column" gap="md">
                 <Label for="storeId" class="w-fit">
-                  {translation("createSponsor").storeSelectLabel}
+                  {pagesTranslation()?.dashboard.createSponsor.storeSelectLabel}
                 </Label>
                 <Select
                   id="storeId"
@@ -109,7 +105,10 @@ export default function CreateSponsor() {
                   onChange={handleChange}
                 >
                   <option value="">
-                    {translation("createSponsor").storeSelectPlaceholder}
+                    {
+                      pagesTranslation()?.dashboard.createSponsor
+                        .storeSelectPlaceholder
+                    }
                   </option>
                   {stores().map((store) => (
                     <option value={store._id}>{store.name}</option>
@@ -118,7 +117,7 @@ export default function CreateSponsor() {
               </Flex>
               <Flex direction="column" gap="md">
                 <Label for="backgroundColor" class="w-fit">
-                  {translation("createSponsor").bgColorLabel}
+                  {pagesTranslation()?.dashboard.createSponsor.bgColorLabel}
                 </Label>
                 <Input
                   type="color"
@@ -130,7 +129,7 @@ export default function CreateSponsor() {
               </Flex>
               <Flex direction="column" gap="md">
                 <Label for="color" class="w-fit">
-                  {translation("createSponsor").colorLabel}
+                  {pagesTranslation()?.dashboard.createSponsor.colorLabel}
                 </Label>
                 <Input
                   type="color"
@@ -142,20 +141,21 @@ export default function CreateSponsor() {
               </Flex>
               <Flex direction="column" gap="md">
                 <Label for="description" class="w-fit">
-                  {translation("createSponsor").descriptionLabel}
+                  {pagesTranslation()?.dashboard.createSponsor.descriptionLabel}
                 </Label>
                 <TextArea
                   id="description"
                   name="description"
                   placeholder={
-                    translation("createSponsor").descriptionPlaceholder
+                    pagesTranslation()?.dashboard.createSponsor
+                      .descriptionPlaceholder
                   }
                   value={sponsor().description}
                   onChange={handleChange}
                 />
               </Flex>
               <Button type="submit">
-                {translation("createSponsor").createSponsorBtn}
+                {pagesTranslation()?.dashboard.createSponsor.createSponsorBtn}
               </Button>
             </form>
           </Flex>

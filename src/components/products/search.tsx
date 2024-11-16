@@ -4,8 +4,7 @@ import Input from "../ui/input";
 import { GAP_SIZE } from "~/constants";
 import Label from "../ui/label";
 import Flex from "../ui/flex";
-import { useTranslation } from "~/hooks/use-translation";
-import { productsTranslation } from "~/translations/pages/products";
+import { usePagesTranslationTree } from "~/hooks/use-translation-tree";
 
 interface ProductsSearchProps {
   inputSearchQuery: Accessor<string>;
@@ -20,12 +19,12 @@ interface ProductsSearchProps {
 }
 
 export default function ProductsSearch(props: ProductsSearchProps) {
-  const translation = useTranslation(productsTranslation);
+  const pagesTranslation = usePagesTranslationTree();
 
   return (
     <Flex direction="column" gap="md">
       <Label for="search" class="w-fit">
-        {translation().search.label}
+        {pagesTranslation()?.products.search.label}
       </Label>
       <form
         class={`flex flex-col ${GAP_SIZE.md} lg:flex-row`}
@@ -36,7 +35,7 @@ export default function ProductsSearch(props: ProductsSearchProps) {
       >
         <Input
           type="text"
-          placeholder={translation().search.placeholder}
+          placeholder={pagesTranslation()?.products.search.placeholder}
           id="search"
           value={props.inputSearchQuery()}
           onInput={props.handleInputChange}
@@ -45,7 +44,7 @@ export default function ProductsSearch(props: ProductsSearchProps) {
           class="w-full lg:w-fit"
           onClick={() => props.searchProducts(props.inputSearchQuery())}
         >
-          {translation().search.button}
+          {pagesTranslation()?.products.search.button}
         </Button>
       </form>
     </Flex>

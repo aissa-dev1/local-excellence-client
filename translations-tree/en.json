@@ -1,0 +1,189 @@
+{
+  "pages": {
+    "home": {
+      "header": {
+        "title": "Discover Local Excellence your all in one store",
+        "discoverBtn": "Discover"
+      },
+      "sponsors": {
+        "title": "Sponsors",
+        "description": "Become a sponsor and get your store listed here.",
+        "makeYoursBtn": "Make Yours",
+        "card": {
+          "exploreBtn": "Explore"
+        }
+      },
+      "stores": {
+        "title": "Stores",
+        "description": "These are the stores of our valued clients who have subscribed to our service.",
+        "createYoursBtn": "Create Yours",
+        "seeMoreBtn": "See More",
+        "noStoresToShow": "No stores to show.",
+        "card": {
+          "goForItBtn": "Go For It"
+        }
+      },
+      "products": {
+        "title": "Products",
+        "description": "These are the products of our valued clients who have subscribed to our service.",
+        "createYoursBtn": "Create Yours",
+        "seeMoreBtn": "See More",
+        "noProductsToShow": "No products to show.",
+        "card": {
+          "goForItBtn": "Go For It"
+        }
+      },
+      "joinUs": {
+        "title": "Join Us",
+        "description1": "Sign up now to unlock exclusive access to our products and deals.",
+        "description2": "Already a member? Log in and start exploring!"
+      }
+    },
+    "products": {
+      "header": {
+        "title": "Explore all our products!"
+      },
+      "search": {
+        "label": "Search for products",
+        "placeholder": "Search...",
+        "button": "Search"
+      },
+      "noProductsFound": "No products found",
+      "loadMoreBtn": "Load more"
+    },
+    "stores": {
+      "header": {
+        "title": "Explore stores near you!"
+      },
+      "search": {
+        "label": "Search for stores",
+        "placeholder": "Search...",
+        "button": "Search"
+      },
+      "noStoresFound": "No stores found",
+      "loadMoreBtn": "Load more"
+    },
+    "signUp": {
+      "agreeText": "By creating an account, you agree to our",
+      "haveAccountText": "Already have an account?"
+    },
+    "login": {
+      "noAccountText": "Don't have an account?"
+    },
+    "store": {
+      "hasNoProducts": "has no products"
+    },
+    "dashboard": {
+      "greeting": "Hi",
+      "sponsorsSectionTxt": "Sponsors",
+      "createSponsor": {
+        "title": "Create Sponsor",
+        "storeSelectLabel": "Store",
+        "storeSelectPlaceholder": "Select a store",
+        "bgColorLabel": "Background color",
+        "colorLabel": "Color",
+        "descriptionLabel": "Description",
+        "descriptionPlaceholder": "Enter a description",
+        "createSponsorBtn": "Create Sponsor"
+      },
+      "createStore": {
+        "title": "Create Store",
+        "nameLabel": "Name",
+        "namePlaceholder": "Enter a name",
+        "descriptionLabel": "Description",
+        "descriptionPlaceholder": "Enter a description",
+        "storeTypeSelectLabel": "Store type",
+        "storeTypeSelectPlaceholder": "Select a store type",
+        "createStoreBtn": "Create Store"
+      },
+      "createProduct": {
+        "title": "Create Product",
+        "storeSelectLabel": "Store",
+        "storeSelectPlaceholder": "Select a store",
+        "nameLabel": "Name",
+        "namePlaceholder": "Enter a name",
+        "descriptionLabel": "Description",
+        "descriptionPlaceholder": "Enter a description",
+        "priceLabel": "Price",
+        "pricePlaceholder": "Enter a price",
+        "createProductBtn": "Create Product"
+      }
+    }
+  },
+  "components": {
+    "dashboard": {
+      "navBar": {
+        "sheet": {
+          "name": "Dashboard",
+          "mineTxt": "Mine",
+          "actionsTxt": "Actions",
+          "advancedActionsTxt": "Advanced actions"
+        }
+      }
+    },
+    "reusable": {
+      "footer": {
+        "copyright": "Copyright ©",
+        "rightsReserved": "Local Excellence all rights reserved."
+      },
+      "languageSwitchSheet": {
+        "name": "Language"
+      }
+    }
+  },
+  "reusable": {
+    "auth": {
+      "email": "Email",
+      "password": "Password",
+      "userName": "User name"
+    },
+    "links": {
+      "home": "Home",
+      "stores": "Stores",
+      "products": "Products",
+      "dashboard": "Dashboard",
+      "createSponsor": "Create sponsor",
+      "createStore": "Create store",
+      "createProduct": "Create product",
+      "signUp": "Sign up",
+      "login": "Login",
+      "signOut": "Sign out",
+      "termsOfService": "Terms of Service"
+    },
+    "toast": {
+      "title": {
+        "success": "Success",
+        "error": "Error",
+        "info": "Info",
+        "done": "Done",
+        "oops": "Oops",
+        "auth": {
+          "signedOut": "Logged out",
+          "loginFailed": "Login failed",
+          "loginSuccessful": "Login successful",
+          "signUpFailed": "Sign up failed",
+          "signUpSuccessful": "Sign up successful"
+        },
+        "product": {
+          "cannotCreate": "Cannot create product",
+          "created": "Product created"
+        },
+        "store": {
+          "cannotCreate": "Cannot create store",
+          "created": "Store created"
+        },
+        "sponsor": {
+          "cannotCreate": "Cannot create sponsor",
+          "created": "Sponsor created"
+        }
+      },
+      "description": {
+        "auth": {
+          "sessionExpired": "Your session has expired",
+          "signedOut": "You have been signed out"
+        }
+      },
+      "closeBtn": "Close"
+    }
+  }
+}

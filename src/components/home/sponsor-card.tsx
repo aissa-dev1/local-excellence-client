@@ -6,15 +6,14 @@ import Typography from "../ui/typography";
 import { encodeStoreName } from "~/utils/store-name";
 import { A } from "@solidjs/router";
 import Button from "../ui/button";
-import { useTranslation } from "~/hooks/use-translation";
-import { homeTranslation } from "~/translations/pages/home";
+import { usePagesTranslationTree } from "~/hooks/use-translation-tree";
 
 interface SponsorCardProps extends SponsorType {
   store: StoreType | null;
 }
 
 export default function SponsorCard(props: SponsorCardProps) {
-  const translation = useTranslation(homeTranslation);
+  const pagesTranslation = usePagesTranslationTree();
 
   return (
     <Card.Self
@@ -36,7 +35,7 @@ export default function SponsorCard(props: SponsorCardProps) {
             }
             class="w-fit"
           >
-            <Button>{translation().sponsors.card.exploreBtn}</Button>
+            <Button>{pagesTranslation()?.home.sponsors.card.exploreBtn}</Button>
           </A>
         </Flex>
       </Card.Padded>

@@ -10,14 +10,14 @@ import Flex from "~/components/ui/flex";
 import Loader from "~/components/ui/loader";
 import Typography from "~/components/ui/typography";
 import { feature } from "~/feature";
-import { useAdvancedTranslation } from "~/hooks/use-translation";
+import {
+  usePagesTranslationTree,
+  useReusableTranslationTree,
+} from "~/hooks/use-translation-tree";
 import { service } from "~/service";
 import { ProductType } from "~/services/product";
 import { StoreType } from "~/services/store";
 import { UserType } from "~/services/user";
-import { storeTranslation } from "~/translations/pages/store";
-import { linksTranslation } from "~/translations/reusable/links";
-import { toastTranslation } from "~/translations/reusable/toast";
 import { withTryCatch } from "~/utils/with-try-catch";
 
 export default function Store() {
@@ -37,13 +37,8 @@ export default function Store() {
     joinedAt: 0,
   });
   const [storeProducts, setStoreProducts] = createSignal<ProductType[]>([]);
-  const translation = useAdvancedTranslation([
-    {
-      store: storeTranslation,
-      links: linksTranslation,
-      toast: toastTranslation,
-    },
-  ]);
+  const pagesTranslation = usePagesTranslationTree();
+  const reusableTranslation = useReusableTranslationTree();
 
   onMount(async () => {
     const [storeResponse, storeError] = await withTryCatch(
@@ -53,7 +48,7 @@ export default function Store() {
 
     if (storeError) {
       feature.toast.addToast(
-        translation("toast").title.oops,
+        reusableTranslation()?.toast.title.oops,
         storeError.response.data.message,
         {
           variant: "error",
@@ -99,12 +94,14 @@ export default function Store() {
               </Flex>
             </Show>
             <Flex direction="column" gap="sm">
-              <Typography.P>{translation("links").products}</Typography.P>
+              <Typography.P>
+                {reusableTranslation()?.links.products}
+              </Typography.P>
               <Show
                 when={storeProducts().length > 0}
                 fallback={
                   <Typography.P>
-                    {store().name} {translation("store").hasNoProducts}
+                    {store().name} {pagesTranslation()?.store.hasNoProducts}
                   </Typography.P>
                 }
               >

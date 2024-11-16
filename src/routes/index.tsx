@@ -1,4 +1,4 @@
-import { onMount } from "solid-js";
+import { createEffect, onMount } from "solid-js";
 import HomeHeader from "~/components/home/header";
 import HomeJoinUs from "~/components/home/join-us";
 import HomeProducts from "~/components/home/products";

@@ -17,21 +17,16 @@ import {
 import { withTryCatch } from "~/utils/with-try-catch";
 import { DOMElement } from "solid-js/jsx-runtime";
 import Flex from "~/components/ui/flex";
-import { useAdvancedTranslation } from "~/hooks/use-translation";
-import { authTranslation } from "~/translations/reusable/auth";
-import { linksTranslation } from "~/translations/reusable/links";
-import { signUpTranslation } from "~/translations/pages/sign-up";
+import {
+  usePagesTranslationTree,
+  useReusableTranslationTree,
+} from "~/hooks/use-translation-tree";
 
 export default function SignUp() {
   const { signUpData, setSignUpData, signUp } = useSignUp();
   const navigate = useNavigate();
-  const translation = useAdvancedTranslation([
-    {
-      links: linksTranslation,
-      auth: authTranslation,
-      signUp: signUpTranslation,
-    },
-  ]);
+  const pagesTranslation = usePagesTranslationTree();
+  const reusableTranslation = useReusableTranslationTree();
 
   onMount(async () => {
     if (feature.auth.state().isAuthenticated) {
@@ -88,7 +83,7 @@ export default function SignUp() {
             alt="Local Excellence"
           />
           <Typography.H3 class="capitalize">
-            {translation("links").signUp}
+            {reusableTranslation()?.links.signUp}
           </Typography.H3>
         </Flex>
         <form onSubmit={handleSubmit}>
@@ -96,40 +91,40 @@ export default function SignUp() {
             <Input
               type="email"
               name="email"
-              placeholder={translation("auth").email}
+              placeholder={reusableTranslation()?.auth.email}
               value={signUpData().email}
               onchange={handleChange}
             />
             <Input
               type="password"
               name="password"
-              placeholder={translation("auth").password}
+              placeholder={reusableTranslation()?.auth.password}
               value={signUpData().password}
               onchange={handleChange}
             />
             <Input
               type="text"
               name="userName"
-              placeholder={translation("auth").userName}
+              placeholder={reusableTranslation()?.auth.userName}
               value={signUpData().userName}
               onchange={handleChange}
             />
             <Button type="submit" disabled={signUpData().loading}>
-              {translation("links").signUp}
+              {reusableTranslation()?.links.signUp}
             </Button>
           </Flex>
         </form>
         <Flex direction="column" gap="md" class="mt-4 text-center">
           <Typography.P>
-            {translation("signUp").agreeText}{" "}
+            {pagesTranslation()?.signUp.agreeText}{" "}
             <A href="/terms">
-              <strong>{translation("links").termsOfService}.</strong>
+              <strong>{reusableTranslation()?.links.termsOfService}.</strong>
             </A>
           </Typography.P>
           <Typography.P>
-            {translation("signUp").haveAccountText}{" "}
+            {pagesTranslation()?.signUp.haveAccountText}{" "}
             <A href="/login">
-              <strong>{translation("links").login}</strong>
+              <strong>{reusableTranslation()?.links.login}</strong>
             </A>
           </Typography.P>
         </Flex>

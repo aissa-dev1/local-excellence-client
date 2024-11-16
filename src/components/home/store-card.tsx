@@ -7,8 +7,7 @@ import { encodeStoreName } from "~/utils/store-name";
 import { service } from "~/service";
 import { createResource, Show } from "solid-js";
 import { withTryCatch } from "~/utils/with-try-catch";
-import { useTranslation } from "~/hooks/use-translation";
-import { homeTranslation } from "~/translations/pages/home";
+import { usePagesTranslationTree } from "~/hooks/use-translation-tree";
 
 interface HomeStoreCardProps extends StoreType {}
 
@@ -24,7 +23,7 @@ export default function HomeStoreCard({
     );
     return error ? null : response;
   });
-  const translation = useTranslation(homeTranslation);
+  const pagesTranslation = usePagesTranslationTree();
 
   return (
     <Card.Self>
@@ -44,7 +43,7 @@ export default function HomeStoreCard({
       <Card.Footer class="flex items-center justify-between">
         <A href={`/stores/${encodeStoreName(name)}`}>
           <Button variant="outline">
-            {translation().stores.card.goForItBtn}
+            {pagesTranslation()?.home.stores.card.goForItBtn}
           </Button>
         </A>
         <Badge class="capitalize">{type}</Badge>

@@ -2,7 +2,7 @@ import { Title as SolidTitle } from "@solidjs/meta";
 import { ComponentProps, splitProps } from "solid-js";
 
 function TitleStatic(props: ComponentProps<"title">) {
-  const [local, rest] = splitProps(props, ["children"]);
+  const [, rest] = splitProps(props, ["children"]);
 
   return <SolidTitle {...rest}>Local Excellence</SolidTitle>;
 }

@@ -8,8 +8,7 @@ import { withTryCatch } from "~/utils/with-try-catch";
 import { feature } from "~/feature";
 import Flex from "../ui/flex";
 import Grid from "../ui/grid";
-import { useTranslation } from "~/hooks/use-translation";
-import { homeTranslation } from "~/translations/pages/home";
+import { usePagesTranslationTree } from "~/hooks/use-translation-tree";
 
 export default function HomeStores() {
   const [homeStores] = createResource(async () => {
@@ -20,18 +19,20 @@ export default function HomeStores() {
     const [response, error] = await withTryCatch(service.store.getStoresSize);
     return error ? 0 : response;
   });
-  const translation = useTranslation(homeTranslation);
+  const pagesTranslation = usePagesTranslationTree();
 
   return (
     <Flex direction="column" gap="lg" id="home_stores">
       <Flex direction="column" gap="sm">
-        <Typography.H3>{translation().stores.title}</Typography.H3>
+        <Typography.H3>{pagesTranslation()?.home.stores.title}</Typography.H3>
         <Flex
           direction="column"
           gap="sm"
           class="md:flex-row md:items-center md:justify-between"
         >
-          <Typography.P>{translation().stores.description}</Typography.P>
+          <Typography.P>
+            {pagesTranslation()?.home.stores.description}
+          </Typography.P>
           <Flex gap="md">
             <A
               href={
@@ -47,12 +48,12 @@ export default function HomeStores() {
                 }
               }}
             >
-              <Button>{translation().stores.createYoursBtn}</Button>
+              <Button>{pagesTranslation()?.home.stores.createYoursBtn}</Button>
             </A>
             <Show when={homeStores() && homeStores()!.length > 0}>
               <A href="/stores">
                 <Button variant="outline">
-                  {translation().stores.seeMoreBtn} ({storesSize()})
+                  {pagesTranslation()?.home.stores.seeMoreBtn} ({storesSize()})
                 </Button>
               </A>
             </Show>
@@ -62,7 +63,9 @@ export default function HomeStores() {
       <Show
         when={homeStores() && homeStores()!.length > 0}
         fallback={
-          <Typography.P>{translation().stores.noStoresToShow}</Typography.P>
+          <Typography.P>
+            {pagesTranslation()?.home.stores.noStoresToShow}
+          </Typography.P>
         }
       >
         <Grid columns="one" gap="md" class="md:grid-cols-2 xl:grid-cols-3">
